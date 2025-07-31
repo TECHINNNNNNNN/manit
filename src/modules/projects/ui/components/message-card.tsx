@@ -27,7 +27,7 @@ const FragmentCard = ({ fragment, isActiveFragment, onFragmentClick }: FragmentC
     return (
         <button
             className={cn(
-                "flex w-1/2 items-center gap-2 px-2 py-5 rounded-md transition-all cursor-pointer hover:bg-blue-500 hover:text-white transition-colors duration-200",
+                "flex w-1/2 items-center gap-2 px-2 py-5 rounded-md cursor-pointer hover:bg-blue-500 hover:text-white transition-colors duration-200",
                 isActiveFragment && "bg-blue-500 text-white",
             )}
             onClick={() => onFragmentClick(fragment)}
