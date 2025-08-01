@@ -15,6 +15,7 @@ import { CodeIcon, CrownIcon, EyeIcon } from "lucide-react";
 import Link from "next/link";
 import { CodeView } from "@/components/code-view";
 import { FileExplorer } from "@/components/ui/file-explorer";
+import { UserControl } from "@/components/ui/user-control";
 
 
 
@@ -75,6 +76,7 @@ export const ProjectView = ({ projectId }: Props) => {
                                         <span>Upgrade</span>
                                     </Link>
                                 </button>
+                                <UserControl />
 
                             </div>
 

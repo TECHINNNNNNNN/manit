@@ -4,15 +4,19 @@ import { useTRPC } from "@/trpc/client";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
+import { useUser } from "@clerk/nextjs";
 
 export const ProjectList = () => {
     const trpc = useTRPC();
+    const { user } = useUser();
     const { data: projects } = useQuery(trpc.projects.getMany.queryOptions());
+
+    if (!user) return null;
 
     return (
         <div className="w-full bg-white dark:bg-sidebar rounded-xl p-8 border flex flex-col gap-y-6 sm:gap-y-4">
             <h2 className="text-2xl font-bold">
-                Previous projects
+                {user?.firstName}'s projects
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
