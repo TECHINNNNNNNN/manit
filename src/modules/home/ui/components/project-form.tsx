@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import { useTRPC } from "@/trpc/client";
 import { useRouter } from "next/navigation";
 import { PROJECT_TEMPLATES } from "@/modules/home/constant";
+import { useClerk } from "@clerk/nextjs";
 
 
 
@@ -25,6 +26,7 @@ export const ProjectForm = () => {
     const router = useRouter();
     const [isFocused, setIsFocused] = useState(false);
     const showUsage = false;
+    const clerk = useClerk()
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -45,6 +47,9 @@ export const ProjectForm = () => {
         },
         onError: (error) => {
             // TODO redirect to pricing page for specific error
+            if (error.data?.code === "UNAUTHORIZED") {
+                clerk.openSignIn();
+            }
             toast.error(error.message);
         }
     }))
