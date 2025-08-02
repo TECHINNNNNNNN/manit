@@ -9,6 +9,7 @@ import { stderr } from "process";
 import prisma from "@/lib/db";
 import { StepToolOptions } from "inngest/components/InngestStepTools";
 import { Message } from "@prisma/client";
+import { SANDBOX_TIMEOUT } from "./types";
 
 interface AgentState {
     summary: string;
@@ -35,6 +36,7 @@ export const codeAgentFunction = inngest.createFunction(
     async ({ event, step }) => {
         const sandboxId = await step.run("get-sandbox-id", async () => {
             const sandbox = await Sandbox.create("manit-techin-test-2");
+            await sandbox.setTimeout(SANDBOX_TIMEOUT);
             return sandbox.sandboxId;
         })
 
@@ -47,7 +49,8 @@ export const codeAgentFunction = inngest.createFunction(
                 },
                 orderBy: {
                     createdAt: "desc",
-                }
+                },
+                take: 10,
             })
 
             for (const message of messages) {
@@ -58,7 +61,7 @@ export const codeAgentFunction = inngest.createFunction(
                 })
             }
 
-            return formattedMessages;
+            return formattedMessages.reverse();
         })
         const state = createState<AgentState>(
             {
