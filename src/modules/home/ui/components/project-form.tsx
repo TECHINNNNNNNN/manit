@@ -43,10 +43,15 @@ export const ProjectForm = () => {
             queryClient.invalidateQueries(
                 trpc.projects.getMany.queryOptions()
             );
+            queryClient.invalidateQueries(
+                trpc.usage.status.queryOptions(),
+            )
             router.push(`/projects/${data.id}`);
         },
         onError: (error) => {
-            // TODO redirect to pricing page for specific error
+            if (error.message === "You've run out of credits") {
+                router.push("/pricing");
+            }
             if (error.data?.code === "UNAUTHORIZED") {
                 clerk.openSignIn();
             }
