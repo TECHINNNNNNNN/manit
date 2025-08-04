@@ -11,24 +11,21 @@ import { Fragment } from "@/generated/prisma";
 import { ProjectHeader } from "@/modules/projects/ui/components/project-header";
 import { FragmentWeb } from "@/modules/projects/ui/components/fragment-web";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CodeIcon, CrownIcon, EyeIcon } from "lucide-react";
-import Link from "next/link";
+import { CodeIcon, EyeIcon } from "lucide-react";
 import { FileExplorer } from "@/components/ui/file-explorer";
-import { UserControl } from "@/components/ui/user-control";
-import { useAuth } from "@clerk/nextjs";
 import { ErrorBoundary } from "react-error-boundary";
+import { AuthSection } from "@/components/ui/auth-section";
 
 
 
 interface Props {
     projectId: string;
+    hasProAccess: boolean;
 };
 
-export const ProjectView = ({ projectId }: Props) => {
+export const ProjectView = ({ projectId, hasProAccess }: Props) => {
     const [activeFragment, setActiveFragment] = useState<Fragment | null>(null);
     const [tabState, setTabState] = useState<'preview' | 'code'>('preview');
-    const { has } = useAuth();
-    const hasProAccess = has?.({ plan: "pro" })
 
     return (
         <div className="h-screen">
@@ -73,16 +70,7 @@ export const ProjectView = ({ projectId }: Props) => {
                                     <CodeIcon /><span>Code</span>
                                 </TabsTrigger>
                             </TabsList>
-                            <div className="ml-auto flex items-center gap-x-2">
-                                {!hasProAccess && <button>
-                                    <Link href="/pricing" className="flex items-center gap-x-2">
-                                        <CrownIcon />
-                                        <span>Upgrade</span>
-                                    </Link>
-                                </button>}
-                                <UserControl />
-
-                            </div>
+                            <AuthSection hasProAccess={hasProAccess} />
 
                         </div>
                         <TabsContent value="preview">
