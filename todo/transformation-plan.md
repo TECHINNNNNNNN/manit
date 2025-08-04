@@ -14,20 +14,20 @@ Transform Manit from a Next.js app builder to an AI-powered static linktree gene
 - [x] Include responsive design and accessibility requirements
 
 ### 1.2 E2B Sandbox Template
-- [ ] Remove Next.js and shadcn/ui from `/sandbox-templates/nextjs/`
-- [ ] Create simple Dockerfile with Python HTTP server
-- [ ] Update compile_page.sh to serve static files on port 3000
-- [ ] Remove all unnecessary dependencies
+- [x] Remove Next.js and shadcn/ui from `/sandbox-templates/nextjs/`
+- [x] Create simple Dockerfile with Python HTTP server
+- [x] Update compile_page.sh to serve static files on port 3000
+- [x] Remove all unnecessary dependencies
 
 ### 1.3 Build & Deploy Template
-- [ ] Run `e2b template build` from sandbox directory
-- [ ] Note new template ID
-- [ ] Test new template locally
+- [x] Run `e2b template build` from sandbox directory
+- [x] Note new template ID (remains nnwt1o5wf494uyjrfwor)
+- [x] Test new template locally
 
 ### 1.4 Update Inngest Function
-- [ ] Update template ID in `/src/inngest/functions.ts`
-- [ ] Adjust for single HTML file output
-- [ ] Update response parsing logic
+- [x] Update template ID in `/src/inngest/functions.ts`
+- [x] Adjust for single HTML file output (no changes needed)
+- [x] Update response parsing logic (works as-is)
 
 ---
 
