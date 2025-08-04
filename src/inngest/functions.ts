@@ -35,7 +35,7 @@ export const codeAgentFunction = inngest.createFunction(
     { event: "code-agent/run" },
     async ({ event, step }) => {
         const sandboxId = await step.run("get-sandbox-id", async () => {
-            const sandbox = await Sandbox.create("manit-techin-test-2");
+            const sandbox = await Sandbox.create("manit-techin-linktree-1");
             await sandbox.setTimeout(SANDBOX_TIMEOUT);
             return sandbox.sandboxId;
         })
