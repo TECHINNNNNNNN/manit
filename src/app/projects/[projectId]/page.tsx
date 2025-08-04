@@ -2,7 +2,8 @@ import { ProjectView } from "@/modules/projects/ui/views/project-view";
 import { getQueryClient, trpc } from "@/trpc/server";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { Suspense } from "react";
-import { ErrorBoundary } from "react-error-boundary";
+import { ClientErrorBoundary } from "@/components/ui/client-error-boundary";
+import { auth } from "@clerk/nextjs/server";
 
 interface Props {
     params: Promise<{
@@ -12,6 +13,10 @@ interface Props {
 
 const Page = async ({ params }: Props) => {
     const { projectId } = await params;
+    
+    // Check auth server-side
+    const { has } = await auth();
+    const hasProAccess = has?.({ plan: "pro" }) ?? false;
 
     const queryClient = getQueryClient();
     void queryClient.prefetchQuery(trpc.messages.getMany.queryOptions({ projectId, }));
@@ -19,11 +24,11 @@ const Page = async ({ params }: Props) => {
 
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
-            <ErrorBoundary fallbackRender={() => <div>Error</div>}>
+            <ClientErrorBoundary>
                 <Suspense fallback={<div>Loading...</div>}>
-                    <ProjectView projectId={projectId} />
+                    <ProjectView projectId={projectId} hasProAccess={hasProAccess} />
                 </Suspense>
-            </ErrorBoundary>
+            </ClientErrorBoundary>
         </HydrationBoundary>
     )
 }
