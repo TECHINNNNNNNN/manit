@@ -1,6 +1,6 @@
 import { openai, createAgent, createTool, createNetwork, type Tool, createState } from "@inngest/agent-kit";
 import { Sandbox } from "@e2b/code-interpreter";
-import { FRAGMENT_TITLE_PROMPT, PROMPT, RESPONSE_PROMPT } from "@/prompt";
+import { FRAGMENT_TITLE_PROMPT, PROJECT_TITLE_PROMPT, PROMPT, RESPONSE_PROMPT } from "@/prompt";
 
 import { inngest } from "./client";
 import { getSandbox, lastAssistantTextMessageContent } from "./utils";
@@ -39,6 +39,12 @@ export const codeAgentFunction = inngest.createFunction(
             await sandbox.setTimeout(SANDBOX_TIMEOUT);
             return sandbox.sandboxId;
         })
+
+        const project = await step.run("get-project", async () => {
+            return await prisma.project.findUnique({
+                where: { id: event.data.projectId }
+            });
+        });
 
         const previousMessages = await step.run("get-previos-messages", async () => {
             const formattedMessages: Message[] = [];
@@ -222,6 +228,23 @@ export const codeAgentFunction = inngest.createFunction(
 
         const { output: fragmentTitleOutput } = await fragmentTitleGenerator.run(result.state.data.summary);
         const { output: responseOutput } = await responseGenerator.run(result.state.data.summary);
+        
+        // Only generate project title if current name is temporary
+        const needsProjectTitle = project?.name?.startsWith("untitled-");
+        let projectTitleOutput = null;
+        
+        if (needsProjectTitle) {
+            const projectTitleGenerator = createAgent({
+                name: "project-title-generator",
+                description: "An assistant that generates a kebab-case project name for a linktree based on its <task_summary>.",
+                system: PROJECT_TITLE_PROMPT,
+                model: openai({
+                    model: "gpt-4o-mini", defaultParameters: {}
+                })
+            });
+            const { output } = await projectTitleGenerator.run(result.state.data.summary);
+            projectTitleOutput = output;
+        }
 
 
 
@@ -244,6 +267,32 @@ export const codeAgentFunction = inngest.createFunction(
                     }
                 })
             }
+            
+            // Update project name only if we generated a new title
+            if (projectTitleOutput) {
+                try {
+                    const projectTitle = parseAgentOutput(projectTitleOutput);
+                    // Only update if we got a valid title
+                    if (projectTitle && projectTitle.trim() !== "" && projectTitle !== "Fragment") {
+                        await prisma.project.update({
+                            where: { id: event.data.projectId },
+                            data: { name: projectTitle }
+                        });
+                    } else {
+                        // Fallback: generate a random name if title generation failed
+                        const { generateSlug } = await import("random-word-slugs");
+                        const fallbackName = generateSlug(2, { format: "kebab" });
+                        await prisma.project.update({
+                            where: { id: event.data.projectId },
+                            data: { name: fallbackName }
+                        });
+                    }
+                } catch (error) {
+                    console.error("Failed to update project name:", error);
+                    // If all else fails, keep the temporary name
+                }
+            }
+            
             return await prisma.message.create({
                 data: {
                     projectId: event.data.projectId,

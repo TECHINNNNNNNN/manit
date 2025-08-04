@@ -68,7 +68,7 @@ export const projectsRouter = createTRPCRouter({
             const createdProject = await prisma.project.create({
                 data: {
                     userId: ctx.auth.userId,
-                    name: generateSlug(2, { format: "kebab" }),
+                    name: `untitled-${Date.now()}`, // Temporary name, will be updated by Inngest
                     messages: {
                         create: {
                             content: input.value,

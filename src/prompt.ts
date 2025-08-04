@@ -114,3 +114,21 @@ The title should be:
 
 Only return the raw title.
 `
+
+export const PROJECT_TITLE_PROMPT = `
+You are an assistant that generates a short, descriptive project name for a linktree based on its <task_summary>.
+The project name should be:
+  - Relevant to the style and content created
+  - Max 2-3 words
+  - Written in kebab-case (e.g., "minimalist-links", "neon-profile", "vibrant-portfolio")
+  - No special characters, only lowercase letters and hyphens
+  - Descriptive of the linktree's style or purpose
+
+Examples:
+- For a minimalist professional links page: "minimal-professional"
+- For a colorful social media hub: "vibrant-social"
+- For a dark themed portfolio: "dark-portfolio"
+- For a neon cyberpunk style: "neon-links"
+
+Only return the raw project name in kebab-case.
+`
