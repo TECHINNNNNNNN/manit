@@ -10,9 +10,9 @@ Comprehensive UX improvements to transform Manit into a delightful, performant, 
 ### 1.1 Skeleton Screen Implementation
 - [x] Create skeleton component for project cards in `/src/modules/projects/ui/components/`
 - [x] Replace "Loading projects..." text with animated skeleton cards
-- [ ] Add skeleton for message cards in messages container
-- [ ] Implement skeleton for project view page during initial load
-- [ ] Add shimmer animation effect to all skeleton components
+- [x] Add skeleton for message cards in messages container
+- [x] Implement skeleton for project view page during initial load
+- [x] Add shimmer animation effect to all skeleton components
 
 ### 1.2 Button Loading States
 - [x] Add spinner to "Create Linktree" button during submission

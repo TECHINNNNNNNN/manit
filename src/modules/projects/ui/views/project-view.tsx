@@ -6,9 +6,11 @@ import {
     ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { MessagesContainer } from "../components/messages-container";
+import { MessagesSkeleton } from "../components/messages-skeleton";
 import { Suspense, useState } from "react";
 import { Fragment } from "@/generated/prisma";
 import { ProjectHeader } from "@/modules/projects/ui/components/project-header";
+import { ProjectHeaderSkeleton } from "@/modules/projects/ui/components/project-header-skeleton";
 import { FragmentWeb } from "@/modules/projects/ui/components/fragment-web";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CodeIcon, EyeIcon } from "lucide-react";
@@ -36,12 +38,12 @@ export const ProjectView = ({ projectId, hasProAccess }: Props) => {
                     className="flex flex-col"
                 >
                     <ErrorBoundary fallbackRender={() => <div>Error</div>}>
-                        <Suspense fallback={<div>Loading project...</div>}>
+                        <Suspense fallback={<ProjectHeaderSkeleton />}>
                             <ProjectHeader projectId={projectId} />
                         </Suspense>
                     </ErrorBoundary>
                     <Suspense
-                        fallback={<div>Loading messages...</div>}
+                        fallback={<MessagesSkeleton />}
                     >
                         <MessagesContainer
                             projectId={projectId}
