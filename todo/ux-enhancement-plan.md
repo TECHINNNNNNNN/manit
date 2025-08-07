@@ -26,7 +26,7 @@ Comprehensive UX improvements to transform Manit into a delightful, performant, 
 - [x] Add progress indicator showing "Preparing preview..."
 - [x] Implement smooth fade-in when iframe content loads
 - [x] Add fallback for iframe loading errors
-- [ ] Consider adding estimated loading time
+- [ ] ~~Consider adding estimated loading time~~ (Skipped - Not essential)
 
 ### 1.4 Error Boundaries & Recovery
 - [x] Replace generic "Error" text with contextual error messages
@@ -39,19 +39,8 @@ Comprehensive UX improvements to transform Manit into a delightful, performant, 
 
 ## PHASE 2: Performance Perception (Priority: HIGH)
 
-### 2.1 Optimistic UI Updates
-- [ ] Implement optimistic project creation (show immediately, sync later)
-- [ ] Add optimistic message sending in project view
-- [ ] Show pending state for optimistic updates
-- [ ] Handle rollback on server errors gracefully
-- [ ] Add visual indicator for syncing state
-
-### 2.2 Progressive Form Enhancement
-- [ ] Split project form into steps (Links → Style → Review)
-- [ ] Add progress indicator at top of form
-- [ ] Implement step validation before progression
-- [ ] Add "Back" navigation between steps
-- [ ] Save form state in localStorage for recovery
+### ~~2.1 Optimistic UI Updates~~ (Skipped - Not necessary for current UX)
+### ~~2.2 Progressive Form Enhancement~~ (Skipped - Form is simple enough as-is)
 
 ### 2.3 Real-time Form Validation
 - [ ] Add inline validation for URL fields
@@ -79,11 +68,11 @@ Comprehensive UX improvements to transform Manit into a delightful, performant, 
 - [ ] Polish hover states with subtle animations
 
 ### 3.2 Empty States Design
-- [ ] Design engaging empty state for "No projects"
-- [ ] Add illustration or icon to empty states
-- [ ] Include clear CTA button "Create Your First Linktree"
-- [ ] Add helpful tips in empty states
-- [ ] Implement consistent empty state pattern
+- [x] Design engaging empty state for "No projects"
+- [x] Add illustration or icon to empty states (Sparkles icon)
+- [x] Include clear CTA button "Create Your First Linktree"
+- [x] Add helpful tips in empty states ("Create your first AI-powered linktree in seconds")
+- [ ] Implement consistent empty state pattern (for other empty states if needed)
 
 ### 3.3 Toast Notifications Enhancement
 - [ ] Add success toast with confetti for project creation

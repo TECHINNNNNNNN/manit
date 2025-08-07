@@ -95,7 +95,7 @@ export const ProjectForm = () => {
 
     return (
         <>
-            <section className="space-y-6">
+            <section className="space-y-6" id="create-form">
                 <form
                     onSubmit={form.handleSubmit(onSubmit)}
                     className={cn(
