@@ -1,6 +1,7 @@
 import { Fragment } from "@/generated/prisma";
 import { useState } from "react";
-import { RefreshCw, ExternalLink, Check } from "lucide-react";
+import { RefreshCw, ExternalLink, Check, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 
 interface Props {
@@ -10,12 +11,15 @@ interface Props {
 export const FragmentWeb = ({ data }: Props) => {
     const [fragmentKey, setFragmentKey] = useState(0);
     const [copied, setCopied] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     const onRefresh = () => {
+        setIsLoading(true);
         setFragmentKey(prev => prev + 1);
     }
     const onCopy = () => {
         navigator.clipboard.writeText(data.sandboxUrl);
+        toast.success("URL copied!");
         setCopied(true);
         setTimeout(() => {
             setCopied(false);
@@ -26,7 +30,7 @@ export const FragmentWeb = ({ data }: Props) => {
             <div className="flex items-center gap-2 px-3 py-2 border-b bg-gray-50">
                 <button
                     onClick={onRefresh}
-                    className="p-1.5 hover:bg-gray-200 rounded transition-colors"
+                    className="btn-icon"
                     title="Refresh"
                 >
                     <RefreshCw className="w-4 h-4" />
@@ -46,19 +50,34 @@ export const FragmentWeb = ({ data }: Props) => {
                 
                 <button
                     onClick={() => window.open(data.sandboxUrl, '_blank')}
-                    className="p-1.5 hover:bg-gray-200 rounded transition-colors"
+                    className="btn-icon"
                     title="Open in new tab"
                 >
                     <ExternalLink className="w-4 h-4" />
                 </button>
             </div>
             
-            <iframe
-                key={fragmentKey}
-                className="flex-1 w-full"
-                sandbox="allow-forms allow-scripts allow-same-origin"
-                src={data.sandboxUrl}
-            />
+            <div className="relative flex-1">
+                {/* Loading overlay */}
+                {isLoading && (
+                    <div className="absolute inset-0 bg-white/80 flex flex-col items-center justify-center z-10 transition-opacity duration-300">
+                        <Loader2 className="w-8 h-8 animate-spin text-blue-500 mb-3" />
+                        <p className="text-sm text-gray-600">Preparing preview...</p>
+                    </div>
+                )}
+                
+                <iframe
+                    key={fragmentKey}
+                    className={`w-full h-full transition-opacity duration-500 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+                    sandbox="allow-forms allow-scripts allow-same-origin"
+                    src={data.sandboxUrl}
+                    onLoad={() => setIsLoading(false)}
+                    onError={() => {
+                        setIsLoading(false);
+                        toast.error("Preview failed to load. Try refreshing.");
+                    }}
+                />
+            </div>
         </div>
     )
 }

@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { useTRPC } from "@/trpc/client";
 import { Usage } from "./usage";
 import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 
 interface Props {
     projectId: string;
@@ -43,6 +44,7 @@ export const MessageForm = ({ projectId }: Props) => {
 
     const createMessage = useMutation(trpc.messages.create.mutationOptions({
         onSuccess: () => {
+            toast.success("Message sent! AI is processing...");
             form.reset();
             queryClient.invalidateQueries(
                 trpc.messages.getMany.queryOptions({ projectId }),
@@ -52,9 +54,11 @@ export const MessageForm = ({ projectId }: Props) => {
             )
         },
         onError: (error) => {
-            toast.error(error.message);
             if (error.message === "You've run out of credits") {
+                toast.info("No credits left. Redirecting to pricing...");
                 router.push("/pricing");
+            } else {
+                toast.error(error.message);
             }
         }
     }))
@@ -112,8 +116,8 @@ export const MessageForm = ({ projectId }: Props) => {
                         <button
                             type="submit"
                             disabled={isDisabled}
-                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
                         >
+                            {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
                             {isPending ? "Sending..." : "Send"}
                         </button>
                     </div>

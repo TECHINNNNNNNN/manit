@@ -119,3 +119,61 @@
   }
 }
 
+/* Consistent button styles */
+@layer components {
+  /* Primary button style - blue background */
+  button[type="submit"],
+  .btn-primary {
+    @apply px-4 py-2 bg-blue-500 text-white rounded-lg font-medium
+           hover:bg-blue-600 active:bg-blue-700
+           disabled:opacity-50 disabled:cursor-not-allowed
+           flex items-center gap-2
+           transition-all duration-200 ease-in-out
+           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+  }
+  
+  /* Secondary button style - outlined */
+  .btn-secondary {
+    @apply px-4 py-2 border border-gray-300 text-gray-700 rounded-lg font-medium
+           hover:bg-gray-50 active:bg-gray-100
+           disabled:opacity-50 disabled:cursor-not-allowed
+           flex items-center gap-2
+           transition-all duration-200 ease-in-out
+           focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2;
+  }
+  
+  /* Ghost button style - no background */
+  .btn-ghost {
+    @apply px-3 py-2 text-gray-600 rounded-lg font-medium
+           hover:bg-gray-100 active:bg-gray-200
+           disabled:opacity-50 disabled:cursor-not-allowed
+           flex items-center gap-2
+           transition-all duration-200 ease-in-out
+           focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2;
+  }
+  
+  /* Danger button style - red for destructive actions */
+  .btn-danger {
+    @apply px-4 py-2 bg-red-500 text-white rounded-lg font-medium
+           hover:bg-red-600 active:bg-red-700
+           disabled:opacity-50 disabled:cursor-not-allowed
+           flex items-center gap-2
+           transition-all duration-200 ease-in-out
+           focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2;
+  }
+  
+  /* Icon button style - square button for icons */
+  .btn-icon {
+    @apply p-2 rounded-lg
+           hover:bg-gray-100 active:bg-gray-200
+           disabled:opacity-50 disabled:cursor-not-allowed
+           transition-all duration-200 ease-in-out
+           focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2;
+  }
+  
+  /* Loading spinner animation for buttons */
+  button .animate-spin {
+    @apply h-4 w-4;
+  }
+}
+

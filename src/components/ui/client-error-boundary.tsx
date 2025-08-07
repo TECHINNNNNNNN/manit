@@ -2,6 +2,7 @@
 
 import { ErrorBoundary } from "react-error-boundary";
 import { ReactNode } from "react";
+import { ErrorFallback } from "./error-fallback";
 
 interface Props {
     children: ReactNode;
@@ -9,7 +10,7 @@ interface Props {
 
 export const ClientErrorBoundary = ({ children }: Props) => {
     return (
-        <ErrorBoundary fallback={<div>Error</div>}>
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
             {children}
         </ErrorBoundary>
     );

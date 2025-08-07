@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import { useTRPC } from "@/trpc/client";
 import { useRouter } from "next/navigation";
 import { useClerk } from "@clerk/nextjs";
+import { Loader2, Check, AlertCircle } from "lucide-react";
 
 
 
@@ -28,11 +29,13 @@ const formSchema = z.object({
 export const ProjectForm = () => {
     const router = useRouter();
     const [isFocused, setIsFocused] = useState(false);
+    const [isRedirecting, setIsRedirecting] = useState(false);
     const showUsage = false;
     const clerk = useClerk()
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
+        mode: "onChange", // Enable real-time validation
         defaultValues: {
             links: [{ platform: "", url: "" }], // Start with one empty link
             styleDescription: "",
@@ -44,6 +47,8 @@ export const ProjectForm = () => {
 
     const createProject = useMutation(trpc.projects.create.mutationOptions({
         onSuccess: (data) => {
+            toast.success("🎉 Linktree created! Redirecting...");
+            setIsRedirecting(true);
             queryClient.invalidateQueries(
                 trpc.projects.getMany.queryOptions()
             );
@@ -54,9 +59,11 @@ export const ProjectForm = () => {
         },
         onError: (error) => {
             if (error.message === "You've run out of credits") {
+                toast.info("No credits left. Redirecting to pricing...");
                 router.push("/pricing");
             }
             if (error.data?.code === "UNAUTHORIZED") {
+                toast.info("Please sign in to continue");
                 clerk.openSignIn();
             }
             toast.error(error.message);
@@ -64,7 +71,7 @@ export const ProjectForm = () => {
     }))
 
     const isPending = createProject.isPending;
-    const isDisabled = isPending || !form.formState.isValid;
+    const isDisabled = isPending || isRedirecting || !form.formState.isValid;
 
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -92,49 +99,77 @@ export const ProjectForm = () => {
 
     return (
         <>
-            <section className="space-y-6">
+            <section className="space-y-6" id="create-form">
                 <form
                     onSubmit={form.handleSubmit(onSubmit)}
                     className={cn(
                         "relative border p-4 rounded-xl transition-all duration-200",
                         isFocused && "shadow-xs",
-                        showUsage && "rounded-t-none"
+                        showUsage && "rounded-t-none",
+                        (isPending || isRedirecting) && "opacity-75"
                     )}
                 >
                     <div className="space-y-4">
                         {/* Links Section */}
                         <div className="space-y-2">
                             <h3 className="text-sm font-medium">Your Links</h3>
-                            {fields.map((field, index) => (
-                                <div key={field.id} className="flex gap-2">
-                                    <input
-                                        {...form.register(`links.${index}.platform`)}
-                                        placeholder="Platform (e.g., Instagram)"
-                                        disabled={isPending}
-                                        className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    />
-                                    <input
-                                        {...form.register(`links.${index}.url`)}
-                                        placeholder="URL (e.g., https://instagram.com/username)"
-                                        disabled={isPending}
-                                        className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    />
-                                    {fields.length > 1 && (
-                                        <button
-                                            type="button"
-                                            onClick={() => remove(index)}
-                                            disabled={isPending}
-                                            className="px-3 py-2 text-red-600 hover:text-red-800"
-                                        >
-                                            Remove
-                                        </button>
-                                    )}
-                                </div>
-                            ))}
+                            {fields.map((field, index) => {
+                                const urlValue = form.watch(`links.${index}.url`);
+                                const platformValue = form.watch(`links.${index}.platform`);
+                                const urlError = form.formState.errors.links?.[index]?.url;
+                                const isValidUrl = urlValue && !urlError && urlValue.startsWith('http');
+                                
+                                return (
+                                    <div key={field.id} className="space-y-1">
+                                        <div className="flex gap-2">
+                                            <input
+                                                {...form.register(`links.${index}.platform`)}
+                                                placeholder="Platform (e.g., Instagram)"
+                                                disabled={isPending || isRedirecting}
+                                                className={cn(
+                                                    "flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500",
+                                                    platformValue && platformValue.length > 0 && "border-green-500"
+                                                )}
+                                            />
+                                            <div className="relative flex-1">
+                                                <input
+                                                    {...form.register(`links.${index}.url`)}
+                                                    placeholder="URL (e.g., https://instagram.com/username)"
+                                                    disabled={isPending || isRedirecting}
+                                                    className={cn(
+                                                        "w-full px-3 py-2 pr-8 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500",
+                                                        isValidUrl && "border-green-500",
+                                                        urlError && urlValue && "border-red-500"
+                                                    )}
+                                                />
+                                                {isValidUrl && (
+                                                    <Check className="absolute right-2 top-2.5 w-4 h-4 text-green-500" />
+                                                )}
+                                                {urlError && urlValue && (
+                                                    <AlertCircle className="absolute right-2 top-2.5 w-4 h-4 text-red-500" />
+                                                )}
+                                            </div>
+                                            {fields.length > 1 && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => remove(index)}
+                                                    disabled={isPending || isRedirecting}
+                                                    className="px-3 py-2 text-red-600 hover:text-red-800"
+                                                >
+                                                    Remove
+                                                </button>
+                                            )}
+                                        </div>
+                                        {urlError && urlValue && (
+                                            <p className="text-xs text-red-500 pl-1">Please enter a valid URL starting with http:// or https://</p>
+                                        )}
+                                    </div>
+                                )
+                            })}
                             <button
                                 type="button"
                                 onClick={addLink}
-                                disabled={isPending}
+                                disabled={isPending || isRedirecting}
                                 className="w-full px-3 py-2 border border-dashed border-gray-300 rounded-md hover:border-gray-400 text-gray-600"
                             >
                                 + Add Another Link
@@ -143,10 +178,19 @@ export const ProjectForm = () => {
 
                         {/* Style Description */}
                         <div className="space-y-2">
-                            <h3 className="text-sm font-medium">Style Preferences</h3>
+                            <div className="flex justify-between items-baseline">
+                                <h3 className="text-sm font-medium">Style Preferences</h3>
+                                <span className={`text-xs ${
+                                    form.watch("styleDescription")?.length > 500 ? "text-red-500" :
+                                    form.watch("styleDescription")?.length >= 10 ? "text-green-500" : 
+                                    "text-gray-400"
+                                }`}>
+                                    {form.watch("styleDescription")?.length || 0}/500
+                                </span>
+                            </div>
                             <TextareaAutosize
                                 {...form.register("styleDescription")}
-                                disabled={isPending}
+                                disabled={isPending || isRedirecting}
                                 placeholder="Describe your preferred style (e.g., minimalist black and white, neon cyberpunk, professional blue...)"
                                 onFocus={() => setIsFocused(true)}
                                 onBlur={() => setIsFocused(false)}
@@ -154,6 +198,9 @@ export const ProjectForm = () => {
                                 minRows={2}
                                 maxRows={5}
                             />
+                            {form.watch("styleDescription")?.length > 0 && form.watch("styleDescription")?.length < 10 && (
+                                <p className="text-xs text-amber-500">Need at least {10 - form.watch("styleDescription").length} more characters</p>
+                            )}
                         </div>
 
                         {/* Show validation errors */}
@@ -173,9 +220,9 @@ export const ProjectForm = () => {
                             <button
                                 type="submit"
                                 disabled={isDisabled}
-                                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
                             >
-                                {isPending ? "Creating..." : "Create Linktree"}
+                                {(isPending || isRedirecting) && <Loader2 className="h-4 w-4 animate-spin" />}
+                                {isPending ? "Creating..." : isRedirecting ? "Redirecting..." : "Create Linktree"}
                             </button>
                         </div>
                     </div>
