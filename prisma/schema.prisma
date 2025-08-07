@@ -48,6 +48,12 @@ model Message {
   fragments Fragment?
 }
 
+enum DeploymentStatus {
+  PENDING
+  DEPLOYED
+  FAILED
+}
+
 model Fragment {
   id        String  @id @default(uuid())
   messageId String  @unique
@@ -56,6 +62,12 @@ model Fragment {
   sandboxUrl String
   title      String
   files      Json
+
+  // Cloudflare deployment fields
+  deploymentUrl      String?
+  deploymentStatus   DeploymentStatus @default(PENDING)
+  deploymentError    String?
+  cloudflareProjectId String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

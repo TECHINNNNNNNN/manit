@@ -55,9 +55,11 @@
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.6.0",
+    "fs-extra": "^11.3.1",
     "inngest": "^3.40.1",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.532.0",
+    "nanoid": "^5.1.5",
     "next": "15.4.4",
     "next-themes": "^0.4.6",
     "prismjs": "^1.30.0",
@@ -77,6 +79,7 @@
     "superjson": "^2.2.2",
     "tailwind-merge": "^3.3.1",
     "vaul": "^1.1.2",
+    "wrangler": "^4.28.1",
     "zod": "^3.25.76"
   },
   "devDependencies": {

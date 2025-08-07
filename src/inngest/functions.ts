@@ -10,6 +10,7 @@ import prisma from "@/lib/db";
 import { StepToolOptions } from "inngest/components/InngestStepTools";
 import { Message } from "@prisma/client";
 import { SANDBOX_TIMEOUT } from "./types";
+import { deployProject } from "@/lib/cloudflare";
 
 interface AgentState {
     summary: string;
@@ -256,6 +257,34 @@ export const codeAgentFunction = inngest.createFunction(
             return `http://${host}`
         })
 
+        // Deploy to Cloudflare Pages for permanent URL
+        const deployment = await step.run("deploy-to-cloudflare", async () => {
+            try {
+                const fragmentTitle = parseAgentOutput(fragmentTitleOutput);
+                const { deploymentUrl, cloudflareProjectId } = await deployProject(
+                    result.state.data.files,
+                    fragmentTitle,
+                    event.data.projectId
+                );
+                
+                console.log(`Deployed to Cloudflare: ${deploymentUrl}`);
+                return {
+                    url: deploymentUrl,
+                    projectId: cloudflareProjectId,
+                    status: 'DEPLOYED' as const
+                };
+            } catch (error) {
+                console.error('Cloudflare deployment failed:', error);
+                // Don't fail the entire function - sandbox URL is still available
+                return {
+                    url: null,
+                    projectId: null,
+                    status: 'FAILED' as const,
+                    error: error instanceof Error ? error.message : 'Unknown deployment error'
+                };
+            }
+        });
+
         await step.run("save-result", async () => {
             if (isError) {
                 return await prisma.message.create({
@@ -304,6 +333,11 @@ export const codeAgentFunction = inngest.createFunction(
                             sandboxUrl: sandboxUrl,
                             title: parseAgentOutput(fragmentTitleOutput),
                             files: result.state.data.files,
+                            // Add Cloudflare deployment info
+                            deploymentUrl: deployment.url,
+                            deploymentStatus: deployment.status,
+                            deploymentError: deployment.error || null,
+                            cloudflareProjectId: deployment.projectId,
                         }
                     }
                 }
