@@ -29,11 +29,11 @@ Comprehensive UX improvements to transform Manit into a delightful, performant, 
 - [ ] Consider adding estimated loading time
 
 ### 1.4 Error Boundaries & Recovery
-- [ ] Replace generic "Error" text with contextual error messages
-- [ ] Add "Try Again" button to all error states
-- [ ] Implement error logging for debugging
-- [ ] Create friendly error messages for common issues
-- [ ] Add offline state detection and messaging
+- [x] Replace generic "Error" text with contextual error messages
+- [x] Add "Try Again" button to all error states
+- [x] Implement error logging for debugging
+- [x] Create friendly error messages for common issues
+- [x] Add offline state detection and messaging
 
 ---
 

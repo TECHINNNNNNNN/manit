@@ -16,6 +16,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CodeIcon, EyeIcon } from "lucide-react";
 import { FileExplorer } from "@/components/ui/file-explorer";
 import { ErrorBoundary } from "react-error-boundary";
+import { ErrorFallback } from "@/components/ui/error-fallback";
 import { AuthSection } from "@/components/ui/auth-section";
 
 
@@ -37,7 +38,7 @@ export const ProjectView = ({ projectId, hasProAccess }: Props) => {
                     minSize={20}
                     className="flex flex-col"
                 >
-                    <ErrorBoundary fallbackRender={() => <div>Error</div>}>
+                    <ErrorBoundary FallbackComponent={ErrorFallback}>
                         <Suspense fallback={<ProjectHeaderSkeleton />}>
                             <ProjectHeader projectId={projectId} />
                         </Suspense>
