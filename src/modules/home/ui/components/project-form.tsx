@@ -17,6 +17,10 @@ import { Loader2, Check, AlertCircle } from "lucide-react";
 
 
 const formSchema = z.object({
+    isPersonal: z.boolean(),
+    organizationName: z.string().max(100).optional(),
+    businessType: z.string().max(100).optional(),
+    targetAudience: z.string().max(200).optional(),
     links: z.array(z.object({
         platform: z.string().min(1, { message: "Platform name required" }),
         url: z.string().url({ message: "Valid URL required" })
@@ -24,7 +28,13 @@ const formSchema = z.object({
     styleDescription: z.string()
         .min(10, { message: "Please describe your preferred style (min 10 characters)" })
         .max(500, { message: "Style description too long (max 500 characters)" }),
-})
+}).refine(
+    (data) => data.isPersonal || (data.organizationName && data.businessType),
+    { 
+        message: "Organization name and type required for business profiles",
+        path: ["organizationName"]
+    }
+)
 
 export const ProjectForm = () => {
     const router = useRouter();
@@ -37,6 +47,10 @@ export const ProjectForm = () => {
         resolver: zodResolver(formSchema),
         mode: "onChange", // Enable real-time validation
         defaultValues: {
+            isPersonal: true,
+            organizationName: "",
+            businessType: "",
+            targetAudience: "",
             links: [{ platform: "", url: "" }], // Start with one empty link
             styleDescription: "",
         }
@@ -75,12 +89,19 @@ export const ProjectForm = () => {
 
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        // Combine links and style into a single prompt
+        // Build context section based on personal/organization
+        const contextSection = values.isPersonal 
+            ? "Personal linktree page"
+            : `Business linktree for ${values.organizationName} (${values.businessType})${
+                values.targetAudience ? `. Target audience: ${values.targetAudience}` : ''
+              }`;
+        
+        // Combine links into formatted section
         const linksSection = values.links
             .map(link => `${link.platform}: ${link.url}`)
             .join('\n');
         
-        const prompt = `Create a linktree page with these links:\n${linksSection}\n\nStyle: ${values.styleDescription}`;
+        const prompt = `Create a linktree page:\nContext: ${contextSection}\nLinks:\n${linksSection}\n\nStyle: ${values.styleDescription}`;
         
         await createProject.mutateAsync({
             value: prompt,
@@ -110,6 +131,110 @@ export const ProjectForm = () => {
                     )}
                 >
                     <div className="space-y-4">
+                        {/* Personal/Organization Toggle */}
+                        <div className="space-y-2">
+                            <h3 className="text-sm font-medium">Profile Type</h3>
+                            <div className="flex gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        form.setValue('isPersonal', true);
+                                        form.setValue('organizationName', '');
+                                        form.setValue('businessType', '');
+                                        form.setValue('targetAudience', '');
+                                    }}
+                                    disabled={isPending || isRedirecting}
+                                    className={cn(
+                                        "flex-1 px-4 py-2 border rounded-md transition-colors",
+                                        form.watch('isPersonal') 
+                                            ? "bg-blue-50 border-blue-500 text-blue-700" 
+                                            : "hover:bg-gray-50"
+                                    )}
+                                >
+                                    Personal
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => form.setValue('isPersonal', false)}
+                                    disabled={isPending || isRedirecting}
+                                    className={cn(
+                                        "flex-1 px-4 py-2 border rounded-md transition-colors",
+                                        !form.watch('isPersonal') 
+                                            ? "bg-blue-50 border-blue-500 text-blue-700" 
+                                            : "hover:bg-gray-50"
+                                    )}
+                                >
+                                    Organization
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Organization Fields (conditional) */}
+                        {!form.watch('isPersonal') && (
+                            <div className="space-y-2 p-3 bg-gray-50 rounded-lg">
+                                <div className="space-y-2">
+                                    <div className="flex justify-between items-baseline">
+                                        <label className="text-sm font-medium">Organization Name *</label>
+                                        <span className={`text-xs ${
+                                            form.watch("organizationName")?.length > 100 ? "text-red-500" : 
+                                            form.watch("organizationName")?.length > 0 ? "text-green-500" : "text-gray-400"
+                                        }`}>
+                                            {form.watch("organizationName")?.length || 0}/100
+                                        </span>
+                                    </div>
+                                    <input
+                                        {...form.register('organizationName')}
+                                        placeholder="e.g., Acme Corp, Creative Studio"
+                                        disabled={isPending || isRedirecting}
+                                        className={cn(
+                                            "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500",
+                                            form.watch('organizationName') && form.watch('organizationName').length > 0 && "border-green-500"
+                                        )}
+                                    />
+                                </div>
+                                
+                                <div className="space-y-2">
+                                    <div className="flex justify-between items-baseline">
+                                        <label className="text-sm font-medium">Business Type *</label>
+                                        <span className={`text-xs ${
+                                            form.watch("businessType")?.length > 100 ? "text-red-500" : 
+                                            form.watch("businessType")?.length > 0 ? "text-green-500" : "text-gray-400"
+                                        }`}>
+                                            {form.watch("businessType")?.length || 0}/100
+                                        </span>
+                                    </div>
+                                    <input
+                                        {...form.register('businessType')}
+                                        placeholder="e.g., E-commerce, SaaS, Restaurant, Consulting..."
+                                        disabled={isPending || isRedirecting}
+                                        className={cn(
+                                            "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500",
+                                            form.watch('businessType') && form.watch('businessType').length > 0 && "border-green-500"
+                                        )}
+                                    />
+                                </div>
+                                
+                                <div className="space-y-2">
+                                    <div className="flex justify-between items-baseline">
+                                        <label className="text-sm font-medium">Target Audience (optional)</label>
+                                        <span className={`text-xs ${
+                                            form.watch("targetAudience")?.length > 200 ? "text-red-500" : "text-gray-400"
+                                        }`}>
+                                            {form.watch("targetAudience")?.length || 0}/200
+                                        </span>
+                                    </div>
+                                    <TextareaAutosize
+                                        {...form.register('targetAudience')}
+                                        disabled={isPending || isRedirecting}
+                                        placeholder="e.g., Young professionals, Tech enthusiasts, Local community..."
+                                        className="w-full px-3 py-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        minRows={1}
+                                        maxRows={2}
+                                    />
+                                </div>
+                            </div>
+                        )}
+
                         {/* Links Section */}
                         <div className="space-y-2">
                             <h3 className="text-sm font-medium">Your Links</h3>
@@ -204,6 +329,11 @@ export const ProjectForm = () => {
                         </div>
 
                         {/* Show validation errors */}
+                        {form.formState.errors.organizationName && (
+                            <p className="text-sm text-red-500">
+                                {form.formState.errors.organizationName.message}
+                            </p>
+                        )}
                         {form.formState.errors.links && (
                             <p className="text-sm text-red-500">
                                 {form.formState.errors.links.message}
