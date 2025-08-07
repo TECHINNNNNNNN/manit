@@ -28,7 +28,7 @@ export const FragmentWeb = ({ data }: Props) => {
             <div className="flex items-center gap-2 px-3 py-2 border-b bg-gray-50">
                 <button
                     onClick={onRefresh}
-                    className="p-1.5 hover:bg-gray-200 rounded transition-colors"
+                    className="btn-icon"
                     title="Refresh"
                 >
                     <RefreshCw className="w-4 h-4" />
@@ -48,7 +48,7 @@ export const FragmentWeb = ({ data }: Props) => {
                 
                 <button
                     onClick={() => window.open(data.sandboxUrl, '_blank')}
-                    className="p-1.5 hover:bg-gray-200 rounded transition-colors"
+                    className="btn-icon"
                     title="Open in new tab"
                 >
                     <ExternalLink className="w-4 h-4" />
