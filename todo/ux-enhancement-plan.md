@@ -49,12 +49,7 @@ Comprehensive UX improvements to transform Manit into a delightful, performant, 
 - [x] Add success checkmarks for valid fields
 - [x] Implement helpful hints below form fields
 
-### 2.4 Streaming & Chunking
-- [ ] Investigate streaming AI responses to show progress
-- [ ] Implement partial content rendering as it arrives
-- [ ] Add typing indicator for AI responses
-- [ ] Consider WebSocket for real-time updates
-- [ ] Show generation progress steps to user
+### ~~2.4 Streaming & Chunking~~ (Deferred - Current timer-based progress is sufficient)
 
 ---
 
@@ -155,9 +150,9 @@ Comprehensive UX improvements to transform Manit into a delightful, performant, 
 ## Key Milestones
 
 - [x] **Milestone 1**: All critical loading states implemented (Phase 1)
-- [ ] **Milestone 2**: Performance perception improved by 50% (Phase 2)
+- [x] **Milestone 2**: Core UX improvements complete (Form validation, Toast notifications)
 - [ ] **Milestone 3**: Micro-interactions and polish complete (Phase 3)
-- [ ] **Milestone 4**: Mobile and accessibility standards met (Phase 4)
+- [ ] **Milestone 4**: Mobile and accessibility standards met (Phase 4) 
 - [ ] **Milestone 5**: Advanced features deployed (Phase 5)
 
 ---
