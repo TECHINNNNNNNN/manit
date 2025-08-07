@@ -29,7 +29,9 @@ const formSchema = z.object({
         .min(10, { message: "Please describe your preferred style (min 10 characters)" })
         .max(500, { message: "Style description too long (max 500 characters)" }),
 }).refine(
-    (data) => data.isPersonal || (data.organizationName && data.businessType),
+    (data) => data.isPersonal || 
+            (data.organizationName && data.organizationName.trim().length > 0 && 
+             data.businessType && data.businessType.trim().length > 0),
     { 
         message: "Organization name and type required for business profiles",
         path: ["organizationName"]
