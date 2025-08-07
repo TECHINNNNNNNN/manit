@@ -22,10 +22,10 @@ Comprehensive UX improvements to transform Manit into a delightful, performant, 
 - [ ] Add loading progress for multi-step operations
 
 ### 1.3 Iframe Loading Experience
-- [ ] Create loading overlay for iframe in `/src/modules/projects/ui/components/message-card.tsx`
-- [ ] Add progress indicator showing "Preparing preview..."
-- [ ] Implement smooth fade-in when iframe content loads
-- [ ] Add fallback for iframe loading errors
+- [x] Create loading overlay for iframe in `/src/modules/projects/ui/components/fragment-web.tsx`
+- [x] Add progress indicator showing "Preparing preview..."
+- [x] Implement smooth fade-in when iframe content loads
+- [x] Add fallback for iframe loading errors
 - [ ] Consider adding estimated loading time
 
 ### 1.4 Error Boundaries & Recovery
