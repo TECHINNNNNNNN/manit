@@ -29,6 +29,7 @@ const formSchema = z.object({
 export const ProjectForm = () => {
     const router = useRouter();
     const [isFocused, setIsFocused] = useState(false);
+    const [isRedirecting, setIsRedirecting] = useState(false);
     const showUsage = false;
     const clerk = useClerk()
 
@@ -45,6 +46,7 @@ export const ProjectForm = () => {
 
     const createProject = useMutation(trpc.projects.create.mutationOptions({
         onSuccess: (data) => {
+            setIsRedirecting(true);
             queryClient.invalidateQueries(
                 trpc.projects.getMany.queryOptions()
             );
@@ -65,7 +67,7 @@ export const ProjectForm = () => {
     }))
 
     const isPending = createProject.isPending;
-    const isDisabled = isPending || !form.formState.isValid;
+    const isDisabled = isPending || isRedirecting || !form.formState.isValid;
 
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -100,7 +102,7 @@ export const ProjectForm = () => {
                         "relative border p-4 rounded-xl transition-all duration-200",
                         isFocused && "shadow-xs",
                         showUsage && "rounded-t-none",
-                        isPending && "opacity-75"
+                        (isPending || isRedirecting) && "opacity-75"
                     )}
                 >
                     <div className="space-y-4">
@@ -112,20 +114,20 @@ export const ProjectForm = () => {
                                     <input
                                         {...form.register(`links.${index}.platform`)}
                                         placeholder="Platform (e.g., Instagram)"
-                                        disabled={isPending}
+                                        disabled={isPending || isRedirecting}
                                         className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     />
                                     <input
                                         {...form.register(`links.${index}.url`)}
                                         placeholder="URL (e.g., https://instagram.com/username)"
-                                        disabled={isPending}
+                                        disabled={isPending || isRedirecting}
                                         className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     />
                                     {fields.length > 1 && (
                                         <button
                                             type="button"
                                             onClick={() => remove(index)}
-                                            disabled={isPending}
+                                            disabled={isPending || isRedirecting}
                                             className="px-3 py-2 text-red-600 hover:text-red-800"
                                         >
                                             Remove
@@ -136,7 +138,7 @@ export const ProjectForm = () => {
                             <button
                                 type="button"
                                 onClick={addLink}
-                                disabled={isPending}
+                                disabled={isPending || isRedirecting}
                                 className="w-full px-3 py-2 border border-dashed border-gray-300 rounded-md hover:border-gray-400 text-gray-600"
                             >
                                 + Add Another Link
@@ -148,7 +150,7 @@ export const ProjectForm = () => {
                             <h3 className="text-sm font-medium">Style Preferences</h3>
                             <TextareaAutosize
                                 {...form.register("styleDescription")}
-                                disabled={isPending}
+                                disabled={isPending || isRedirecting}
                                 placeholder="Describe your preferred style (e.g., minimalist black and white, neon cyberpunk, professional blue...)"
                                 onFocus={() => setIsFocused(true)}
                                 onBlur={() => setIsFocused(false)}
@@ -177,8 +179,8 @@ export const ProjectForm = () => {
                                 disabled={isDisabled}
                                 className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 flex items-center gap-2"
                             >
-                                {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
-                                {isPending ? "Creating..." : "Create Linktree"}
+                                {(isPending || isRedirecting) && <Loader2 className="h-4 w-4 animate-spin" />}
+                                {isPending ? "Creating..." : isRedirecting ? "Redirecting..." : "Create Linktree"}
                             </button>
                         </div>
                     </div>
