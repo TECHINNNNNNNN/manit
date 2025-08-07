@@ -19,7 +19,7 @@ Comprehensive UX improvements to transform Manit into a delightful, performant, 
 - [x] Add opacity reduction to form during submission
 - [x] Add loading state to all action buttons (delete, retry, etc.)
 - [x] Implement disabled state styling consistency
-- [ ] Add loading progress for multi-step operations
+- [x] Add loading progress for multi-step operations
 
 ### 1.3 Iframe Loading Experience
 - [x] Create loading overlay for iframe in `/src/modules/projects/ui/components/fragment-web.tsx`
@@ -160,7 +160,7 @@ Comprehensive UX improvements to transform Manit into a delightful, performant, 
 
 ## Key Milestones
 
-- [ ] **Milestone 1**: All critical loading states implemented (Phase 1)
+- [x] **Milestone 1**: All critical loading states implemented (Phase 1)
 - [ ] **Milestone 2**: Performance perception improved by 50% (Phase 2)
 - [ ] **Milestone 3**: Micro-interactions and polish complete (Phase 3)
 - [ ] **Milestone 4**: Mobile and accessibility standards met (Phase 4)
