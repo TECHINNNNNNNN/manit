@@ -18,9 +18,9 @@ import { Loader2, Check, AlertCircle } from "lucide-react";
 
 const formSchema = z.object({
     isPersonal: z.boolean(),
-    organizationName: z.string().max(100).optional(),
-    businessType: z.string().max(100).optional(),
-    targetAudience: z.string().max(200).optional(),
+    organizationName: z.string().optional(),
+    businessType: z.string().optional(),
+    targetAudience: z.string().optional(),
     links: z.array(z.object({
         platform: z.string().min(1, { message: "Platform name required" }),
         url: z.string().url({ message: "Valid URL required" })
@@ -28,15 +28,25 @@ const formSchema = z.object({
     styleDescription: z.string()
         .min(10, { message: "Please describe your preferred style (min 10 characters)" })
         .max(500, { message: "Style description too long (max 500 characters)" }),
-}).refine(
-    (data) => data.isPersonal || 
-            (data.organizationName && data.organizationName.trim().length > 0 && 
-             data.businessType && data.businessType.trim().length > 0),
-    { 
-        message: "Organization name and type required for business profiles",
-        path: ["organizationName"]
+}).superRefine((data, ctx) => {
+    // Only validate organization fields when Organization is selected
+    if (!data.isPersonal) {
+        if (!data.organizationName || data.organizationName.trim().length === 0) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: "Organization name is required",
+                path: ["organizationName"]
+            });
+        }
+        if (!data.businessType || data.businessType.trim().length === 0) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: "Business type is required",
+                path: ["businessType"]
+            });
+        }
     }
-)
+})
 
 export const ProjectForm = () => {
     const router = useRouter();
@@ -48,6 +58,7 @@ export const ProjectForm = () => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         mode: "onChange", // Enable real-time validation
+        reValidateMode: "onChange", // Re-validate on every change after error
         defaultValues: {
             isPersonal: true,
             organizationName: "",
@@ -144,6 +155,8 @@ export const ProjectForm = () => {
                                         form.setValue('organizationName', '');
                                         form.setValue('businessType', '');
                                         form.setValue('targetAudience', '');
+                                        // Trigger validation to clear any errors
+                                        form.trigger();
                                     }}
                                     disabled={isPending || isRedirecting}
                                     className={cn(
@@ -157,7 +170,11 @@ export const ProjectForm = () => {
                                 </button>
                                 <button
                                     type="button"
-                                    onClick={() => form.setValue('isPersonal', false)}
+                                    onClick={() => {
+                                        form.setValue('isPersonal', false);
+                                        // Trigger validation to check organization fields
+                                        form.trigger();
+                                    }}
                                     disabled={isPending || isRedirecting}
                                     className={cn(
                                         "flex-1 px-4 py-2 border rounded-md transition-colors",
@@ -334,6 +351,11 @@ export const ProjectForm = () => {
                         {form.formState.errors.organizationName && (
                             <p className="text-sm text-red-500">
                                 {form.formState.errors.organizationName.message}
+                            </p>
+                        )}
+                        {form.formState.errors.businessType && (
+                            <p className="text-sm text-red-500">
+                                {form.formState.errors.businessType.message}
                             </p>
                         )}
                         {form.formState.errors.links && (
