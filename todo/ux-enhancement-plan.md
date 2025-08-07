@@ -43,11 +43,11 @@ Comprehensive UX improvements to transform Manit into a delightful, performant, 
 ### ~~2.2 Progressive Form Enhancement~~ (Skipped - Form is simple enough as-is)
 
 ### 2.3 Real-time Form Validation
-- [ ] Add inline validation for URL fields
-- [ ] Implement character count for style description
-- [ ] Show validation errors as user types (debounced)
-- [ ] Add success checkmarks for valid fields
-- [ ] Implement helpful hints below form fields
+- [x] Add inline validation for URL fields
+- [x] Implement character count for style description
+- [x] Show validation errors as user types (debounced)
+- [x] Add success checkmarks for valid fields
+- [x] Implement helpful hints below form fields
 
 ### 2.4 Streaming & Chunking
 - [ ] Investigate streaming AI responses to show progress

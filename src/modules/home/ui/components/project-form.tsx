@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 import { useTRPC } from "@/trpc/client";
 import { useRouter } from "next/navigation";
 import { useClerk } from "@clerk/nextjs";
-import { Loader2 } from "lucide-react";
+import { Loader2, Check, AlertCircle } from "lucide-react";
 
 
 
@@ -35,6 +35,7 @@ export const ProjectForm = () => {
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
+        mode: "onChange", // Enable real-time validation
         defaultValues: {
             links: [{ platform: "", url: "" }], // Start with one empty link
             styleDescription: "",
@@ -109,32 +110,59 @@ export const ProjectForm = () => {
                         {/* Links Section */}
                         <div className="space-y-2">
                             <h3 className="text-sm font-medium">Your Links</h3>
-                            {fields.map((field, index) => (
-                                <div key={field.id} className="flex gap-2">
-                                    <input
-                                        {...form.register(`links.${index}.platform`)}
-                                        placeholder="Platform (e.g., Instagram)"
-                                        disabled={isPending || isRedirecting}
-                                        className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    />
-                                    <input
-                                        {...form.register(`links.${index}.url`)}
-                                        placeholder="URL (e.g., https://instagram.com/username)"
-                                        disabled={isPending || isRedirecting}
-                                        className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    />
-                                    {fields.length > 1 && (
-                                        <button
-                                            type="button"
-                                            onClick={() => remove(index)}
-                                            disabled={isPending || isRedirecting}
-                                            className="px-3 py-2 text-red-600 hover:text-red-800"
-                                        >
-                                            Remove
-                                        </button>
-                                    )}
-                                </div>
-                            ))}
+                            {fields.map((field, index) => {
+                                const urlValue = form.watch(`links.${index}.url`);
+                                const platformValue = form.watch(`links.${index}.platform`);
+                                const urlError = form.formState.errors.links?.[index]?.url;
+                                const isValidUrl = urlValue && !urlError && urlValue.startsWith('http');
+                                
+                                return (
+                                    <div key={field.id} className="space-y-1">
+                                        <div className="flex gap-2">
+                                            <input
+                                                {...form.register(`links.${index}.platform`)}
+                                                placeholder="Platform (e.g., Instagram)"
+                                                disabled={isPending || isRedirecting}
+                                                className={cn(
+                                                    "flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500",
+                                                    platformValue && platformValue.length > 0 && "border-green-500"
+                                                )}
+                                            />
+                                            <div className="relative flex-1">
+                                                <input
+                                                    {...form.register(`links.${index}.url`)}
+                                                    placeholder="URL (e.g., https://instagram.com/username)"
+                                                    disabled={isPending || isRedirecting}
+                                                    className={cn(
+                                                        "w-full px-3 py-2 pr-8 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500",
+                                                        isValidUrl && "border-green-500",
+                                                        urlError && urlValue && "border-red-500"
+                                                    )}
+                                                />
+                                                {isValidUrl && (
+                                                    <Check className="absolute right-2 top-2.5 w-4 h-4 text-green-500" />
+                                                )}
+                                                {urlError && urlValue && (
+                                                    <AlertCircle className="absolute right-2 top-2.5 w-4 h-4 text-red-500" />
+                                                )}
+                                            </div>
+                                            {fields.length > 1 && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => remove(index)}
+                                                    disabled={isPending || isRedirecting}
+                                                    className="px-3 py-2 text-red-600 hover:text-red-800"
+                                                >
+                                                    Remove
+                                                </button>
+                                            )}
+                                        </div>
+                                        {urlError && urlValue && (
+                                            <p className="text-xs text-red-500 pl-1">Please enter a valid URL starting with http:// or https://</p>
+                                        )}
+                                    </div>
+                                )
+                            })}
                             <button
                                 type="button"
                                 onClick={addLink}
@@ -147,7 +175,16 @@ export const ProjectForm = () => {
 
                         {/* Style Description */}
                         <div className="space-y-2">
-                            <h3 className="text-sm font-medium">Style Preferences</h3>
+                            <div className="flex justify-between items-baseline">
+                                <h3 className="text-sm font-medium">Style Preferences</h3>
+                                <span className={`text-xs ${
+                                    form.watch("styleDescription")?.length > 500 ? "text-red-500" :
+                                    form.watch("styleDescription")?.length >= 10 ? "text-green-500" : 
+                                    "text-gray-400"
+                                }`}>
+                                    {form.watch("styleDescription")?.length || 0}/500
+                                </span>
+                            </div>
                             <TextareaAutosize
                                 {...form.register("styleDescription")}
                                 disabled={isPending || isRedirecting}
@@ -158,6 +195,9 @@ export const ProjectForm = () => {
                                 minRows={2}
                                 maxRows={5}
                             />
+                            {form.watch("styleDescription")?.length > 0 && form.watch("styleDescription")?.length < 10 && (
+                                <p className="text-xs text-amber-500">Need at least {10 - form.watch("styleDescription").length} more characters</p>
+                            )}
                         </div>
 
                         {/* Show validation errors */}
