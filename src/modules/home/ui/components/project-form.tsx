@@ -47,6 +47,7 @@ export const ProjectForm = () => {
 
     const createProject = useMutation(trpc.projects.create.mutationOptions({
         onSuccess: (data) => {
+            toast.success("🎉 Linktree created! Redirecting...");
             setIsRedirecting(true);
             queryClient.invalidateQueries(
                 trpc.projects.getMany.queryOptions()
@@ -58,9 +59,11 @@ export const ProjectForm = () => {
         },
         onError: (error) => {
             if (error.message === "You've run out of credits") {
+                toast.info("No credits left. Redirecting to pricing...");
                 router.push("/pricing");
             }
             if (error.data?.code === "UNAUTHORIZED") {
+                toast.info("Please sign in to continue");
                 clerk.openSignIn();
             }
             toast.error(error.message);

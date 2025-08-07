@@ -75,11 +75,16 @@ Comprehensive UX improvements to transform Manit into a delightful, performant, 
 - [ ] Implement consistent empty state pattern (for other empty states if needed)
 
 ### 3.3 Toast Notifications Enhancement
-- [ ] Add success toast with confetti for project creation
-- [ ] Implement action buttons in toasts (View, Undo)
-- [ ] Add progress toasts for long operations
-- [ ] Create toast queue for multiple notifications
-- [ ] Add notification sound option (with toggle)
+- [x] Add success toast for project creation
+- [x] Add success toast for message sending
+- [x] Add success toast for clipboard copy
+- [x] Add info toasts for redirects (credits, auth)
+- [x] Add error toast for iframe loading failures
+- [ ] ~~Add confetti animation~~ (Skipped - keeping it simple)
+- [ ] ~~Implement action buttons in toasts~~ (Not needed for now)
+- [ ] Add progress toasts for long operations (Next: streaming)
+- [ ] ~~Create toast queue~~ (Handled by sonner automatically)
+- [ ] ~~Add notification sound~~ (Skipped - can be annoying)
 
 ### 3.4 Visual Feedback
 - [ ] Add pulse animation to "Processing" states

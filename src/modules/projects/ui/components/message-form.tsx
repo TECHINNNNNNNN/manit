@@ -44,6 +44,7 @@ export const MessageForm = ({ projectId }: Props) => {
 
     const createMessage = useMutation(trpc.messages.create.mutationOptions({
         onSuccess: () => {
+            toast.success("Message sent! AI is processing...");
             form.reset();
             queryClient.invalidateQueries(
                 trpc.messages.getMany.queryOptions({ projectId }),
@@ -53,9 +54,11 @@ export const MessageForm = ({ projectId }: Props) => {
             )
         },
         onError: (error) => {
-            toast.error(error.message);
             if (error.message === "You've run out of credits") {
+                toast.info("No credits left. Redirecting to pricing...");
                 router.push("/pricing");
+            } else {
+                toast.error(error.message);
             }
         }
     }))

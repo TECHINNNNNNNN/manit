@@ -1,6 +1,7 @@
 import { Fragment } from "@/generated/prisma";
 import { useState } from "react";
 import { RefreshCw, ExternalLink, Check, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 
 interface Props {
@@ -18,6 +19,7 @@ export const FragmentWeb = ({ data }: Props) => {
     }
     const onCopy = () => {
         navigator.clipboard.writeText(data.sandboxUrl);
+        toast.success("URL copied!");
         setCopied(true);
         setTimeout(() => {
             setCopied(false);
@@ -70,7 +72,10 @@ export const FragmentWeb = ({ data }: Props) => {
                     sandbox="allow-forms allow-scripts allow-same-origin"
                     src={data.sandboxUrl}
                     onLoad={() => setIsLoading(false)}
-                    onError={() => setIsLoading(false)}
+                    onError={() => {
+                        setIsLoading(false);
+                        toast.error("Preview failed to load. Try refreshing.");
+                    }}
                 />
             </div>
         </div>
