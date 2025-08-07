@@ -176,8 +176,8 @@ export const ProjectForm = () => {
                                     <div className="flex justify-between items-baseline">
                                         <label className="text-sm font-medium">Organization Name *</label>
                                         <span className={`text-xs ${
-                                            form.watch("organizationName")?.length > 100 ? "text-red-500" : 
-                                            form.watch("organizationName")?.length > 0 ? "text-green-500" : "text-gray-400"
+                                            (form.watch("organizationName")?.length ?? 0) > 100 ? "text-red-500" : 
+                                            (form.watch("organizationName")?.length ?? 0) > 0 ? "text-green-500" : "text-gray-400"
                                         }`}>
                                             {form.watch("organizationName")?.length || 0}/100
                                         </span>
@@ -188,7 +188,7 @@ export const ProjectForm = () => {
                                         disabled={isPending || isRedirecting}
                                         className={cn(
                                             "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500",
-                                            form.watch('organizationName') && form.watch('organizationName').length > 0 && "border-green-500"
+                                            form.watch('organizationName') && form.watch('organizationName')!.length > 0 && "border-green-500"
                                         )}
                                     />
                                 </div>
@@ -197,8 +197,8 @@ export const ProjectForm = () => {
                                     <div className="flex justify-between items-baseline">
                                         <label className="text-sm font-medium">Business Type *</label>
                                         <span className={`text-xs ${
-                                            form.watch("businessType")?.length > 100 ? "text-red-500" : 
-                                            form.watch("businessType")?.length > 0 ? "text-green-500" : "text-gray-400"
+                                            (form.watch("businessType")?.length ?? 0) > 100 ? "text-red-500" : 
+                                            (form.watch("businessType")?.length ?? 0) > 0 ? "text-green-500" : "text-gray-400"
                                         }`}>
                                             {form.watch("businessType")?.length || 0}/100
                                         </span>
@@ -209,7 +209,7 @@ export const ProjectForm = () => {
                                         disabled={isPending || isRedirecting}
                                         className={cn(
                                             "w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500",
-                                            form.watch('businessType') && form.watch('businessType').length > 0 && "border-green-500"
+                                            form.watch('businessType') && form.watch('businessType')!.length > 0 && "border-green-500"
                                         )}
                                     />
                                 </div>
@@ -218,7 +218,7 @@ export const ProjectForm = () => {
                                     <div className="flex justify-between items-baseline">
                                         <label className="text-sm font-medium">Target Audience (optional)</label>
                                         <span className={`text-xs ${
-                                            form.watch("targetAudience")?.length > 200 ? "text-red-500" : "text-gray-400"
+                                            (form.watch("targetAudience")?.length ?? 0) > 200 ? "text-red-500" : "text-gray-400"
                                         }`}>
                                             {form.watch("targetAudience")?.length || 0}/200
                                         </span>
