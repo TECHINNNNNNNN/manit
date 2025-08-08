@@ -11,9 +11,10 @@ import { nanoid } from 'nanoid';
  * Generates a unique project name for Cloudflare Pages
  * Cloudflare requirements:
  * - Must be lowercase
- * - Can contain letters, numbers, and hyphens
+ * - Can contain letters, numbers, and hyphens ONLY
  * - Must start with a letter
  * - Max 63 characters
+ * - NO underscores allowed (will cause "Project not found" errors)
  */
 export const generateCloudflareProjectName = (
   projectTitle: string,
@@ -27,10 +28,14 @@ export const generateCloudflareProjectName = (
     .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
   
   // Generate a short unique ID (6 characters)
-  const uniqueId = nanoid(6).toLowerCase();
+  // Replace any underscores that nanoid might generate with hyphens
+  const uniqueId = nanoid(6).toLowerCase().replace(/_/g, '-');
   
   // Combine parts: prefix-title-id
   let projectName = `${prefix}-${sanitized}-${uniqueId}`;
+  
+  // Final safety check: replace any remaining underscores with hyphens
+  projectName = projectName.replace(/_/g, '-');
   
   // Ensure it starts with a letter (prefix should handle this)
   if (!/^[a-z]/.test(projectName)) {
@@ -54,6 +59,7 @@ export const generateCloudflareProjectName = (
 export const isValidCloudflareProjectName = (name: string): boolean => {
   return (
     /^[a-z][a-z0-9-]{0,62}$/.test(name) && // Starts with letter, valid chars, max 63
-    !name.endsWith('-') // Doesn't end with hyphen
+    !name.endsWith('-') && // Doesn't end with hyphen
+    !name.includes('_') // No underscores allowed
   );
 };

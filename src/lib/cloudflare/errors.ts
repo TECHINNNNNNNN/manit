@@ -89,16 +89,37 @@ export const parseWranglerError = (stderr: string): CloudflareDeploymentError =>
     return createRateLimitError();
   }
   
-  if (stderr.includes('authentication') || stderr.includes('unauthorized')) {
-    return createAuthError();
+  if (stderr.includes('authentication') || stderr.includes('unauthorized') || 
+      stderr.includes('API token') || stderr.includes('invalid token')) {
+    return createAuthError(`Authentication failed: ${stderr}`);
   }
   
   if (stderr.includes('file size') || stderr.includes('too large')) {
     return createFileSizeError();
   }
   
-  if (stderr.includes('network') || stderr.includes('timeout')) {
+  if (stderr.includes('network') || stderr.includes('timeout') || 
+      stderr.includes('ECONNRESET') || stderr.includes('ETIMEDOUT')) {
     return createNetworkError();
+  }
+  
+  // Project-specific errors (retryable)
+  if (stderr.includes('Project not found') || stderr.includes('does not exist') ||
+      stderr.includes('already exists') || stderr.includes('name is already taken')) {
+    return createDeploymentError(
+      `Project configuration error: ${stderr}`,
+      'PROJECT_ERROR',
+      true
+    );
+  }
+  
+  // Wrangler command errors (usually retryable)
+  if (stderr.includes('Command failed') || stderr.includes('Error:')) {
+    return createDeploymentError(
+      `Wrangler command failed: ${stderr}`,
+      'COMMAND_ERROR',  
+      true
+    );
   }
   
   // Generic error

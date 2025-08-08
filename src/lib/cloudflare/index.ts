@@ -22,6 +22,47 @@ import {
 const execAsync = promisify(exec);
 
 /**
+ * Validates Cloudflare API token by attempting to list accounts
+ * @returns true if token is valid, false otherwise
+ */
+export const validateApiToken = async (): Promise<boolean> => {
+  const { accountId, apiToken } = deploymentConfig.cloudflare;
+  
+  if (!accountId || !apiToken) {
+    console.error('Missing Cloudflare credentials');
+    return false;
+  }
+  
+  try {
+    const command = `npx wrangler whoami`;
+    const env = {
+      ...process.env,
+      CLOUDFLARE_ACCOUNT_ID: accountId,
+      CLOUDFLARE_API_TOKEN: apiToken,
+    };
+    
+    const { stdout, stderr } = await execAsync(command, {
+      env,
+      timeout: 10000, // 10 second timeout
+    });
+    
+    console.log('API Token validation result:', stdout);
+    
+    // Check if authentication was successful
+    if (stdout.includes('You are logged in') || stdout.includes(accountId)) {
+      console.log('✅ Cloudflare API token validated successfully');
+      return true;
+    }
+    
+    console.error('❌ API token validation failed:', stderr || stdout);
+    return false;
+  } catch (error: any) {
+    console.error('❌ Failed to validate API token:', error.message);
+    return false;
+  }
+};
+
+/**
  * Prepares files for deployment by writing them to a temporary directory
  * @param files - Object with file paths as keys and content as values
  * @param projectId - Unique project identifier
@@ -73,6 +114,59 @@ export const prepareFilesForDeployment = async (
 };
 
 /**
+ * Creates a Cloudflare Pages project if it doesn't exist
+ * @param projectName - Cloudflare project name
+ * @returns true if created or already exists
+ */
+const ensureProjectExists = async (projectName: string): Promise<boolean> => {
+  const { accountId, apiToken } = deploymentConfig.cloudflare;
+  const env = {
+    ...process.env,
+    CLOUDFLARE_ACCOUNT_ID: accountId,
+    CLOUDFLARE_API_TOKEN: apiToken,
+  };
+  
+  try {
+    console.log(`Ensuring project exists: ${projectName}`);
+    
+    // Try to create the project with production branch
+    const createCommand = `npx wrangler pages project create ${projectName} --production-branch=main`;
+    const { stdout, stderr } = await execAsync(createCommand, {
+      env,
+      timeout: 30000, // 30 second timeout
+    });
+    
+    console.log(`✅ Project created: ${projectName}`);
+    console.log('Create stdout:', stdout);
+    return true;
+  } catch (error: any) {
+    console.log('Project creation error details:', {
+      message: error.message,
+      stdout: error.stdout,
+      stderr: error.stderr,
+      code: error.code
+    });
+    
+    // Check if project already exists (this is okay)
+    const errorOutput = error.stderr || error.stdout || error.message || '';
+    if (errorOutput.includes('already exists') || errorOutput.includes('name is already taken')) {
+      console.log(`ℹ️ Project already exists: ${projectName}`);
+      return true;
+    }
+    
+    // Check for authentication issues
+    if (errorOutput.includes('authentication') || errorOutput.includes('unauthorized')) {
+      throw createAuthError(`Project creation failed: ${errorOutput}`);
+    }
+    
+    // For other errors, still try to continue but log them properly
+    console.warn(`Warning: Could not create project ${projectName}: ${errorOutput}`);
+    console.warn(`Attempting deployment anyway - project may exist or be created during deploy`);
+    return false;
+  }
+};
+
+/**
  * Deploys files to Cloudflare Pages using Wrangler CLI
  * @param projectName - Cloudflare project name
  * @param filesPath - Path to directory containing files to deploy
@@ -84,27 +178,37 @@ export const deployToCloudflare = async (
 ): Promise<string> => {
   const { accountId, apiToken } = deploymentConfig.cloudflare;
   
-  // Build the wrangler command
-  const command = `npx wrangler pages deploy "${filesPath}" --project-name="${projectName}"`;
+  // Ensure project exists first
+  await ensureProjectExists(projectName);
   
-  // Set environment variables for authentication
+  // Build the wrangler command (removed --log-level debug as it's not recognized)
+  const command = `npx wrangler pages deploy "${filesPath}" --project-name="${projectName}" --commit-dirty=true`;
+  
+  // Set environment variables for authentication and debugging
   const env = {
     ...process.env,
     CLOUDFLARE_ACCOUNT_ID: accountId,
     CLOUDFLARE_API_TOKEN: apiToken,
+    WRANGLER_LOG: 'debug', // Enable debug logging
   };
   
   try {
     console.log(`Deploying to Cloudflare Pages project: ${projectName}`);
+    console.log(`Command: ${command}`);
+    console.log(`Account ID: ${accountId}`);
+    console.log(`API Token: ${apiToken ? `${apiToken.substring(0, 10)}...` : 'NOT SET'}`);
     
     const { stdout, stderr } = await execAsync(command, {
       env,
       timeout: deploymentConfig.deployment.timeout,
     });
     
-    // Log output for debugging
-    console.log('Wrangler stdout:', stdout);
-    if (stderr) console.log('Wrangler stderr:', stderr);
+    // Log all output for debugging
+    console.log('=== Wrangler stdout ===');
+    console.log(stdout);
+    console.log('=== Wrangler stderr ===');
+    console.log(stderr);
+    console.log('======================');
     
     // Parse deployment URL from output
     // Wrangler typically outputs: "✨ Deployment complete! https://[hash].[project].pages.dev"
@@ -116,16 +220,70 @@ export const deployToCloudflare = async (
       return deploymentUrl;
     }
     
-    // If no URL found in stdout, throw error
+    // If no URL found in stdout, throw error with full output
     throw createDeploymentError(
-      'Could not parse deployment URL from Wrangler output',
+      `Could not parse deployment URL from Wrangler output. Stdout: ${stdout}. Stderr: ${stderr}`,
       'PARSE_ERROR',
       false
     );
-  } catch (error) {
-    // Parse the error to determine if it's retryable
-    const stderr = (error as any).stderr || '';
-    throw parseWranglerError(stderr);
+  } catch (error: any) {
+    console.error('=== Deployment Error Details ===');
+    console.error('Error object:', error);
+    console.error('Error message:', error.message);
+    console.error('Error code:', error.code);
+    console.error('Error stderr:', error.stderr);
+    console.error('Error stdout:', error.stdout);
+    console.error('Error cmd:', error.cmd);
+    console.error('================================');
+    
+    // Parse the error - check multiple places where stderr might be
+    let errorMessage = '';
+    
+    if (error.stderr) {
+      errorMessage = error.stderr;
+    } else if (error.stdout) {
+      errorMessage = error.stdout;
+    } else if (error.message) {
+      errorMessage = error.message;
+    } else {
+      errorMessage = JSON.stringify(error);
+    }
+    
+    // If still empty, provide more context
+    if (!errorMessage || errorMessage.trim() === '') {
+      errorMessage = `Command failed with exit code ${error.code || 'unknown'}. No error output captured.`;
+    }
+    
+    // Special handling for project not found errors
+    if (errorMessage.includes('Project not found') || errorMessage.includes('does not exist')) {
+      console.log('Project not found - attempting to recreate project before retry');
+      try {
+        // Force create the project again
+        const forceCreateCommand = `npx wrangler pages project create ${projectName} --production-branch=main`;
+        await execAsync(forceCreateCommand, {
+          env,
+          timeout: 30000,
+        });
+        console.log('Project recreated, retrying deployment...');
+        // Retry the deployment once more
+        const retryResult = await execAsync(command, {
+          env,
+          timeout: deploymentConfig.deployment.timeout,
+        });
+        
+        const urlMatch = retryResult.stdout.match(/https:\/\/[\w-]+\.[\w-]+\.pages\.dev/);
+        if (urlMatch) {
+          const deploymentUrl = urlMatch[0];
+          console.log(`Deployment successful after project recreation: ${deploymentUrl}`);
+          return deploymentUrl;
+        }
+      } catch (retryError: any) {
+        console.error('Failed to recreate project and retry:', retryError);
+        // Fall through to original error handling
+      }
+    }
+    
+    throw parseWranglerError(errorMessage);
   }
 };
 
@@ -201,6 +359,18 @@ export const deployProject = async (
   projectTitle: string,
   projectId: string
 ): Promise<{ deploymentUrl: string; cloudflareProjectId: string }> => {
+  // Validate API token first
+  console.log('Validating Cloudflare API token...');
+  const isValid = await validateApiToken();
+  
+  if (!isValid) {
+    throw createDeploymentError(
+      'Cloudflare API token validation failed. Please check your CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID environment variables.',
+      'AUTH_FAILED',
+      false
+    );
+  }
+  
   // Generate unique project name
   const cloudflareProjectName = generateCloudflareProjectName(projectTitle);
   

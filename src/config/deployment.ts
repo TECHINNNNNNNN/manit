@@ -5,6 +5,26 @@
  * DEPENDENCIES: Environment variables from .env
  */
 
+// Ensure environment variables are loaded for server-side deployment
+// Next.js loads .env automatically for client/pages, but not for background jobs
+if (typeof window === 'undefined' && !process.env.CLOUDFLARE_ACCOUNT_ID) {
+  try {
+    // Explicitly load from .env file (not .env.local)
+    const path = require('path');
+    const dotenv = require('dotenv');
+    const envPath = path.resolve(process.cwd(), '.env');
+    const result = dotenv.config({ path: envPath });
+    
+    if (result.error) {
+      console.warn('Could not load .env file:', result.error.message);
+    } else {
+      console.log('Loaded environment variables from .env for Cloudflare deployment');
+    }
+  } catch (e) {
+    console.warn('dotenv not available - using existing process.env');
+  }
+}
+
 export const deploymentConfig = {
   cloudflare: {
     accountId: process.env.CLOUDFLARE_ACCOUNT_ID!,
