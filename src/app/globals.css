@@ -251,6 +251,86 @@ button[type="submit"]:disabled,
   box-shadow: 0 0 15px rgba(255, 107, 53, 0.1);
 }
 
+/* Animated aura border effect */
+.aura-wrapper {
+  position: relative;
+  border-radius: 0.875rem;
+  padding: 3px;
+  background: transparent;
+  overflow: hidden;
+}
+
+.aura-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 0.875rem;
+  padding: 3px;
+  background: conic-gradient(
+    from var(--angle, 0deg) at 50% 50%,
+    transparent 0deg,
+    rgba(255, 107, 53, 0.8) 30deg,
+    rgba(255, 161, 22, 1) 60deg,
+    rgba(139, 92, 246, 0.8) 90deg,
+    transparent 120deg,
+    transparent 240deg,
+    rgba(139, 92, 246, 0.8) 270deg,
+    rgba(255, 161, 22, 1) 300deg,
+    rgba(255, 107, 53, 0.8) 330deg,
+    transparent 360deg
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: rotate-aura 3s linear infinite;
+  filter: blur(1px);
+  opacity: 0.9;
+}
+
+@keyframes rotate-aura {
+  from {
+    --angle: 0deg;
+  }
+  to {
+    --angle: 360deg;
+  }
+}
+
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* Subtle glow behind the form */
+.aura-glow {
+  position: absolute;
+  inset: -40px;
+  border-radius: 1rem;
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 107, 53, 0.15),
+    rgba(255, 161, 22, 0.1),
+    rgba(139, 92, 246, 0.08),
+    transparent 60%
+  );
+  filter: blur(30px);
+  animation: pulse-aura 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes pulse-aura {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
 /* Loading spinner */
 @keyframes spin {
   from { transform: rotate(0deg); }

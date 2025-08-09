@@ -30,9 +30,12 @@ export default function Home() {
           Describe what you need and Manit&apos;s AI builds it for you.
         </p>
 
-        {/* Form container with glass effect */}
-        <div className="max-w-3xl mx-auto w-full">
-          <ProjectForm />
+        {/* Form container with animated aura effect */}
+        <div className="max-w-3xl mx-auto w-full relative">
+          <div className="aura-wrapper aura-border">
+            <div className="aura-glow" />
+            <ProjectForm />
+          </div>
         </div>
 
         {/* Trust indicators */}
