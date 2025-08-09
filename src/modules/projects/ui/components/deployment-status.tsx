@@ -159,10 +159,12 @@ export const DeploymentStatusDisplay = ({
                             </DropdownMenuItem>
                             
                             <DropdownMenuItem 
-                                onClick={() => window.open(
-                                    `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`,
-                                    '_blank'
-                                )}
+                                onClick={() => {
+                                    // LinkedIn sharing - using mini=true for better compatibility
+                                    // LinkedIn sometimes ignores the URL in share-offsite, so we include it in the summary
+                                    const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?mini=true&url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(projectName)}&summary=${encodeURIComponent(shareText)}&source=${encodeURIComponent('Manit')}`;
+                                    window.open(linkedinUrl, '_blank');
+                                }}
                                 className="gap-2"
                             >
                                 <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
