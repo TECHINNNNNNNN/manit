@@ -38,14 +38,14 @@ export const AnimatedBackground = () => {
     }> = [];
 
     // Create particles
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 80; i++) {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        size: Math.random() * 2 + 0.5,
-        speedX: (Math.random() - 0.5) * 0.5,
-        speedY: (Math.random() - 0.5) * 0.5,
-        opacity: Math.random() * 0.5 + 0.1,
+        size: Math.random() * 3 + 1,
+        speedX: (Math.random() - 0.5) * 0.8,
+        speedY: (Math.random() - 0.5) * 0.8,
+        opacity: Math.random() * 0.7 + 0.3,
       });
     }
 
@@ -53,11 +53,29 @@ export const AnimatedBackground = () => {
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Draw particles
-      particles.forEach((particle) => {
+      // Draw particles with gradient
+      particles.forEach((particle, index) => {
+        // Create gradient for each particle
+        const gradient = ctx.createRadialGradient(
+          particle.x, particle.y, 0,
+          particle.x, particle.y, particle.size * 2
+        );
+        
+        // Alternate between orange and purple tones
+        if (index % 3 === 0) {
+          gradient.addColorStop(0, `rgba(255, 107, 53, ${particle.opacity})`);
+          gradient.addColorStop(1, `rgba(255, 107, 53, 0)`);
+        } else if (index % 3 === 1) {
+          gradient.addColorStop(0, `rgba(255, 215, 0, ${particle.opacity})`);
+          gradient.addColorStop(1, `rgba(255, 215, 0, 0)`);
+        } else {
+          gradient.addColorStop(0, `rgba(139, 92, 246, ${particle.opacity})`);
+          gradient.addColorStop(1, `rgba(139, 92, 246, 0)`);
+        }
+        
         ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 107, 53, ${particle.opacity})`;
+        ctx.arc(particle.x, particle.y, particle.size * 2, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
         ctx.fill();
 
         // Update particle position
@@ -86,15 +104,17 @@ export const AnimatedBackground = () => {
       {/* Canvas for particles */}
       <canvas
         ref={canvasRef}
-        className="fixed inset-0 pointer-events-none opacity-50"
+        className="fixed inset-0 pointer-events-none opacity-80"
         style={{ zIndex: 1 }}
       />
       
-      {/* Gradient orbs */}
+      {/* Gradient orbs - more vivid */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 0 }}>
-        <div className="absolute -top-40 -left-40 w-80 h-80 bg-gradient-to-br from-orange-500/10 to-transparent rounded-full blur-3xl animate-pulse" />
-        <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-gradient-to-br from-purple-500/10 to-transparent rounded-full blur-3xl animate-pulse" style={{ animationDelay: "2s" }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-amber-500/5 to-transparent rounded-full blur-3xl animate-pulse" style={{ animationDelay: "4s" }} />
+        <div className="absolute -top-40 -left-40 w-96 h-96 bg-gradient-to-br from-orange-500/30 via-amber-500/20 to-transparent rounded-full blur-3xl animate-pulse" />
+        <div className="absolute -bottom-40 -right-40 w-[500px] h-[500px] bg-gradient-to-br from-purple-500/25 via-pink-500/15 to-transparent rounded-full blur-3xl animate-pulse" style={{ animationDelay: "2s" }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-br from-amber-500/15 via-orange-500/10 to-transparent rounded-full blur-3xl animate-pulse" style={{ animationDelay: "4s" }} />
+        <div className="absolute top-1/4 right-1/4 w-72 h-72 bg-gradient-to-br from-yellow-500/20 to-transparent rounded-full blur-2xl animate-pulse" style={{ animationDelay: "3s" }} />
+        <div className="absolute bottom-1/4 left-1/4 w-64 h-64 bg-gradient-to-br from-indigo-500/20 to-transparent rounded-full blur-2xl animate-pulse" style={{ animationDelay: "1s" }} />
       </div>
       
     </>
