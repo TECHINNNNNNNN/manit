@@ -4,6 +4,7 @@ import "./globals.css";
 import { TRPCReactProvider } from "@/trpc/client";
 import { Toaster } from "sonner";
 import { ClerkProvider } from "@clerk/nextjs";
+import { AnimatedBackground } from "@/components/ui/animated-background";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,6 +33,7 @@ export default function RootLayout({
           <body
             className={`${geistSans.variable} ${geistMono.variable} antialiased`}
           >
+            <AnimatedBackground />
             <Toaster />
             {children}
           </body>
