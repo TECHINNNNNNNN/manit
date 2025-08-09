@@ -10,6 +10,8 @@ import prisma from "@/lib/db";
 import { StepToolOptions } from "inngest/components/InngestStepTools";
 import { Message } from "@prisma/client";
 import { SANDBOX_TIMEOUT } from "./types";
+import { deployToGitHubPages } from "@/lib/github-deploy";
+import { generateShortCode, buildShortUrl } from "@/lib/url-shortener";
 
 interface AgentState {
     summary: string;
@@ -256,7 +258,7 @@ export const codeAgentFunction = inngest.createFunction(
             return `http://${host}`
         })
 
-        await step.run("save-result", async () => {
+        const savedMessage = await step.run("save-result", async () => {
             if (isError) {
                 return await prisma.message.create({
                     data: {
@@ -308,6 +310,70 @@ export const codeAgentFunction = inngest.createFunction(
                     }
                 }
             })
+        })
+        
+        // Deploy to GitHub Pages automatically after successful generation
+        await step.run("deploy-to-github", async () => {
+            if (!isError && result.state.data.files?.["index.html"]) {
+                try {
+                    // Update status to deploying
+                    await prisma.project.update({
+                        where: { id: event.data.projectId },
+                        data: { deploymentStatus: "DEPLOYING" }
+                    });
+                    
+                    // Get the latest project name
+                    const updatedProject = await prisma.project.findUnique({
+                        where: { id: event.data.projectId }
+                    });
+                    
+                    if (!updatedProject) {
+                        throw new Error("Project not found");
+                    }
+                    
+                    // Deploy to GitHub Pages
+                    const deployResult = await deployToGitHubPages(
+                        event.data.projectId,
+                        updatedProject.name,
+                        result.state.data.files["index.html"]
+                    );
+                    
+                    if (deployResult.success) {
+                        // Generate short URL
+                        const shortCode = generateShortCode(event.data.projectId);
+                        const shortUrl = buildShortUrl(shortCode);
+                        
+                        // Update project with deployment info
+                        await prisma.project.update({
+                            where: { id: event.data.projectId },
+                            data: {
+                                githubRepo: deployResult.repoName,
+                                deploymentUrl: deployResult.pagesUrl,
+                                deploymentStatus: "DEPLOYED",
+                                deployedAt: new Date(),
+                                shortUrl: shortUrl,
+                            }
+                        });
+                        
+                        console.log(`Successfully deployed project ${event.data.projectId} to ${deployResult.pagesUrl}`);
+                    } else {
+                        // Deployment failed
+                        await prisma.project.update({
+                            where: { id: event.data.projectId },
+                            data: { deploymentStatus: "FAILED" }
+                        });
+                        
+                        console.error(`Failed to deploy project ${event.data.projectId}: ${deployResult.error}`);
+                    }
+                } catch (error) {
+                    console.error(`Deployment error for project ${event.data.projectId}:`, error);
+                    
+                    await prisma.project.update({
+                        where: { id: event.data.projectId },
+                        data: { deploymentStatus: "FAILED" }
+                    });
+                }
+            }
         })
 
         return {
