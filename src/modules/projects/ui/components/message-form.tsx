@@ -80,8 +80,8 @@ export const MessageForm = ({ projectId }: Props) => {
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
                 className={cn(
-                    "relative border p-4 pt-1 rounded-xl transition-all duration-200",
-                    isFocused && "shadow-xs",
+                    "relative glass border-border p-4 pt-1 rounded-xl transition-all duration-200",
+                    isFocused && "glow-primary",
                     showUsage && "rounded-t-none"
                 )}
             >
@@ -93,7 +93,7 @@ export const MessageForm = ({ projectId }: Props) => {
                         placeholder="Type your message..."
                         onFocus={() => setIsFocused(true)}
                         onBlur={() => setIsFocused(false)}
-                        className="w-full resize-none border-0 bg-transparent focus:outline-none"
+                        className="w-full resize-none border-0 bg-transparent focus:outline-none text-foreground placeholder:text-muted-foreground"
                         minRows={1}
                         maxRows={10}
                         onKeyDown={(e) => {
@@ -106,7 +106,7 @@ export const MessageForm = ({ projectId }: Props) => {
 
                     {/* Show validation errors */}
                     {form.formState.errors.value && (
-                        <p className="text-sm text-red-500">
+                        <p className="text-sm text-destructive">
                             {form.formState.errors.value.message}
                         </p>
                     )}

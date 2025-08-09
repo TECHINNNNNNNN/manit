@@ -15,12 +15,12 @@ export const ProjectHeader = ({ projectId }: Props) => {
     )
 
     return (
-        <div className="flex items-center justify-between px-4 py-3 border-b">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-card/10">
             <div className="flex items-center gap-2">
-                <Link href="/" className="p-1 hover:bg-gray-100 rounded">
+                <Link href="/" className="btn-ghost p-2 rounded-md">
                     <ArrowLeft className="w-4 h-4" />
                 </Link>
-                <h1 className="text-lg font-semibold">{project.name}</h1>
+                <h1 className="text-lg font-semibold text-foreground">{project.name}</h1>
             </div>
             <div className="flex items-center gap-4">
                 <DeploymentStatusDisplay 
@@ -30,7 +30,7 @@ export const ProjectHeader = ({ projectId }: Props) => {
                     githubRepo={project.githubRepo}
                     projectName={project.name}
                 />
-                <div className="text-sm text-gray-500">
+                <div className="text-sm text-muted-foreground">
                     {new Date(project.createdAt).toLocaleDateString()}
                 </div>
             </div>

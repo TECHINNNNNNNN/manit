@@ -137,7 +137,7 @@ export const ProjectForm = () => {
                 <form
                     onSubmit={form.handleSubmit(onSubmit)}
                     className={cn(
-                        "relative border p-4 rounded-xl transition-all duration-200",
+                        "relative glass p-4 rounded-xl transition-all duration-200",
                         isFocused && "shadow-xs",
                         showUsage && "rounded-t-none",
                         (isPending || isRedirecting) && "opacity-75"
@@ -160,10 +160,10 @@ export const ProjectForm = () => {
                                     }}
                                     disabled={isPending || isRedirecting}
                                     className={cn(
-                                        "flex-1 px-4 py-2 border rounded-md transition-colors",
+                                        "flex-1 px-4 py-2.5 rounded-lg transition-all duration-200 font-medium border",
                                         form.watch('isPersonal') 
-                                            ? "bg-blue-50 border-blue-500 text-blue-700" 
-                                            : "hover:bg-gray-50"
+                                            ? "bg-gradient-to-r from-orange-500/20 to-amber-500/20 border-orange-500/30 text-orange-400" 
+                                            : "bg-transparent border-white/10 text-muted-foreground hover:bg-white/5 hover:text-foreground hover:border-white/20"
                                     )}
                                 >
                                     Personal
@@ -177,10 +177,10 @@ export const ProjectForm = () => {
                                     }}
                                     disabled={isPending || isRedirecting}
                                     className={cn(
-                                        "flex-1 px-4 py-2 border rounded-md transition-colors",
+                                        "flex-1 px-4 py-2.5 rounded-lg transition-all duration-200 font-medium border",
                                         !form.watch('isPersonal') 
-                                            ? "bg-blue-50 border-blue-500 text-blue-700" 
-                                            : "hover:bg-gray-50"
+                                            ? "bg-gradient-to-r from-orange-500/20 to-amber-500/20 border-orange-500/30 text-orange-400" 
+                                            : "bg-transparent border-white/10 text-muted-foreground hover:bg-white/5 hover:text-foreground hover:border-white/20"
                                     )}
                                 >
                                     Organization
@@ -190,13 +190,13 @@ export const ProjectForm = () => {
 
                         {/* Organization Fields (conditional) */}
                         {!form.watch('isPersonal') && (
-                            <div className="space-y-2 p-3 bg-gray-50 rounded-lg">
+                            <div className="space-y-2 p-3 glass rounded-lg">
                                 <div className="space-y-2">
                                     <div className="flex justify-between items-baseline">
                                         <label className="text-sm font-medium">Organization Name *</label>
                                         <span className={`text-xs ${
                                             (form.watch("organizationName")?.length ?? 0) > 100 ? "text-red-500" : 
-                                            (form.watch("organizationName")?.length ?? 0) > 0 ? "text-green-500" : "text-gray-400"
+                                            (form.watch("organizationName")?.length ?? 0) > 0 ? "text-green-500" : "text-muted-foreground"
                                         }`}>
                                             {form.watch("organizationName")?.length || 0}/100
                                         </span>
@@ -217,7 +217,7 @@ export const ProjectForm = () => {
                                         <label className="text-sm font-medium">Business Type *</label>
                                         <span className={`text-xs ${
                                             (form.watch("businessType")?.length ?? 0) > 100 ? "text-red-500" : 
-                                            (form.watch("businessType")?.length ?? 0) > 0 ? "text-green-500" : "text-gray-400"
+                                            (form.watch("businessType")?.length ?? 0) > 0 ? "text-green-500" : "text-muted-foreground"
                                         }`}>
                                             {form.watch("businessType")?.length || 0}/100
                                         </span>
@@ -237,7 +237,7 @@ export const ProjectForm = () => {
                                     <div className="flex justify-between items-baseline">
                                         <label className="text-sm font-medium">Target Audience (optional)</label>
                                         <span className={`text-xs ${
-                                            (form.watch("targetAudience")?.length ?? 0) > 200 ? "text-red-500" : "text-gray-400"
+                                            (form.watch("targetAudience")?.length ?? 0) > 200 ? "text-red-500" : "text-muted-foreground"
                                         }`}>
                                             {form.watch("targetAudience")?.length || 0}/200
                                         </span>
@@ -246,7 +246,7 @@ export const ProjectForm = () => {
                                         {...form.register('targetAudience')}
                                         disabled={isPending || isRedirecting}
                                         placeholder="e.g., Young professionals, Tech enthusiasts, Local community..."
-                                        className="w-full px-3 py-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="w-full px-3 py-2.5 rounded-lg bg-input border border-white/10 resize-none input-glow transition-all duration-200 placeholder:text-muted-foreground/50"
                                         minRows={1}
                                         maxRows={2}
                                     />
@@ -338,13 +338,53 @@ export const ProjectForm = () => {
                                 placeholder="Describe your preferred style (e.g., minimalist black and white, neon cyberpunk, professional blue...)"
                                 onFocus={() => setIsFocused(true)}
                                 onBlur={() => setIsFocused(false)}
-                                className="w-full px-3 py-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-3 py-3 rounded-lg bg-input border border-white/10 resize-none input-glow transition-all duration-200 placeholder:text-muted-foreground/50"
                                 minRows={2}
                                 maxRows={5}
                             />
                             {form.watch("styleDescription")?.length > 0 && form.watch("styleDescription")?.length < 10 && (
                                 <p className="text-xs text-amber-500">Need at least {10 - form.watch("styleDescription").length} more characters</p>
                             )}
+                            
+                            {/* Example style tags */}
+                            <div className="flex flex-wrap gap-2 mt-3">
+                                <button
+                                    type="button"
+                                    onClick={() => form.setValue("styleDescription", "Minimalist design with clean lines and monochrome colors")}
+                                    className="btn-tag"
+                                    disabled={isPending || isRedirecting}
+                                >
+                                    <span className="w-2 h-2 rounded-full bg-white/50"></span>
+                                    Minimalist
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => form.setValue("styleDescription", "Vibrant neon colors with cyberpunk aesthetic and glowing effects")}
+                                    className="btn-tag"
+                                    disabled={isPending || isRedirecting}
+                                >
+                                    <span className="w-2 h-2 rounded-full bg-purple-400"></span>
+                                    Cyberpunk
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => form.setValue("styleDescription", "Professional corporate style with blue tones and clean typography")}
+                                    className="btn-tag"
+                                    disabled={isPending || isRedirecting}
+                                >
+                                    <span className="w-2 h-2 rounded-full bg-blue-400"></span>
+                                    Professional
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => form.setValue("styleDescription", "Playful and colorful design with rounded corners and fun animations")}
+                                    className="btn-tag"
+                                    disabled={isPending || isRedirecting}
+                                >
+                                    <span className="w-2 h-2 rounded-full bg-pink-400"></span>
+                                    Playful
+                                </button>
+                            </div>
                         </div>
 
                         {/* Show validation errors */}
