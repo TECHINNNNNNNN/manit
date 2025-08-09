@@ -1,3 +1,9 @@
+/**
+ * COMPONENT: ProjectPage
+ * PURPOSE: Individual project view with dark theme and loading states
+ * FLOW: Server-side auth check → data prefetching → client-side rendering
+ * DEPENDENCIES: ProjectView, tRPC, Clerk auth, React Query
+ */
 import { ProjectView } from "@/modules/projects/ui/views/project-view";
 import { getQueryClient, trpc } from "@/trpc/server";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
@@ -11,6 +17,15 @@ interface Props {
     }>
 }
 
+const ProjectLoadingSkeleton = () => (
+    <div className="h-screen bg-background flex items-center justify-center">
+        <div className="glass rounded-2xl p-8 flex flex-col items-center gap-4">
+            <div className="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full" />
+            <p className="text-muted-foreground">Loading project...</p>
+        </div>
+    </div>
+);
+
 const Page = async ({ params }: Props) => {
     const { projectId } = await params;
     
@@ -23,13 +38,15 @@ const Page = async ({ params }: Props) => {
     void queryClient.prefetchQuery(trpc.projects.getOne.queryOptions({ id: projectId, }));
 
     return (
-        <HydrationBoundary state={dehydrate(queryClient)}>
-            <ClientErrorBoundary>
-                <Suspense fallback={<div>Loading...</div>}>
-                    <ProjectView projectId={projectId} hasProAccess={hasProAccess} />
-                </Suspense>
-            </ClientErrorBoundary>
-        </HydrationBoundary>
+        <div className="bg-background">
+            <HydrationBoundary state={dehydrate(queryClient)}>
+                <ClientErrorBoundary>
+                    <Suspense fallback={<ProjectLoadingSkeleton />}>
+                        <ProjectView projectId={projectId} hasProAccess={hasProAccess} />
+                    </Suspense>
+                </ClientErrorBoundary>
+            </HydrationBoundary>
+        </div>
     )
 }
 

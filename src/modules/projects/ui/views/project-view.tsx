@@ -31,12 +31,12 @@ export const ProjectView = ({ projectId, hasProAccess }: Props) => {
     const [tabState, setTabState] = useState<'preview' | 'code'>('preview');
 
     return (
-        <div className="h-screen">
+        <div className="h-screen bg-background">
             <ResizablePanelGroup direction="horizontal">
                 <ResizablePanel
                     defaultSize={35}
                     minSize={20}
-                    className="flex flex-col"
+                    className="flex flex-col bg-card/30 border-r border-border"
                 >
                     <ErrorBoundary FallbackComponent={ErrorFallback}>
                         <Suspense fallback={<ProjectHeaderSkeleton />}>
@@ -53,10 +53,11 @@ export const ProjectView = ({ projectId, hasProAccess }: Props) => {
                         />
                     </Suspense>
                 </ResizablePanel>
-                <ResizableHandle className="hover:bg-primary transition-colors" />
+                <ResizableHandle className="hover:bg-primary/20 transition-colors bg-border" />
                 <ResizablePanel
                     defaultSize={65}
                     minSize={50}
+                    className="bg-background"
                 >
                     <Tabs
                         className="h-full gap-y-0"
@@ -64,8 +65,8 @@ export const ProjectView = ({ projectId, hasProAccess }: Props) => {
                         value={tabState}
                         onValueChange={(value) => setTabState(value as 'preview' | 'code')}
                     >
-                        <div className="w-full flex items-center p-2 border-b gap-x-2">
-                            <TabsList className="h-8 p-0 border rounded-md">
+                        <div className="w-full flex items-center p-2 border-b border-border bg-card/20 gap-x-2">
+                            <TabsList className="h-8 p-0 border border-border bg-muted/20 rounded-md">
                                 <TabsTrigger value="preview">
                                     <EyeIcon /><span>Demo</span>
                                 </TabsTrigger>

@@ -10,7 +10,7 @@ interface UserMessageProps {
 const UserMessage = ({ content }: UserMessageProps) => {
     return (
         <div className="flex justify-end pb-4 pr-2 pl-10">
-            <div className="bg-blue-100 rounded-lg px-4 py-2 shadow-sm">
+            <div className="glass glow-primary rounded-lg px-4 py-2 text-foreground">
                 {content}
             </div>
         </div>
@@ -27,8 +27,8 @@ const FragmentCard = ({ fragment, isActiveFragment, onFragmentClick }: FragmentC
     return (
         <button
             className={cn(
-                "flex w-1/2 items-center gap-2 px-2 py-5 rounded-md cursor-pointer hover:bg-blue-500 hover:text-white transition-colors duration-200",
-                isActiveFragment && "bg-blue-500 text-white",
+                "flex w-1/2 items-center gap-2 px-2 py-5 rounded-md cursor-pointer glass hover:glass-hover hover:glow-primary transition-all duration-200 text-foreground",
+                isActiveFragment && "bg-primary text-primary-foreground glow-primary",
             )}
             onClick={() => onFragmentClick(fragment)}
         >
@@ -65,8 +65,8 @@ const AssistantMessage = ({
 }: AssistantMessageProps) => {
     return (
         <div className={cn(
-            "flex flex-col group px-2 pb-4",
-            type === "ERROR" && "text-red-700 dark:text-red-500",
+            "flex flex-col group px-2 pb-4 text-foreground",
+            type === "ERROR" && "text-destructive",
         )}>
             <div className="flex items-center gap-2 pl-2 mb-2">
                 <span className="text-sm font-medium">Manit</span>

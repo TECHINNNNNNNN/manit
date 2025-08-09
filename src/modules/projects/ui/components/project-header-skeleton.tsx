@@ -10,10 +10,10 @@ import { ArrowLeft } from "lucide-react";
 
 export const ProjectHeaderSkeleton = () => {
     return (
-        <div className="flex items-center justify-between px-4 py-3 border-b">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-card/10">
             <div className="flex items-center gap-2">
                 {/* Back button - keep visible but disabled looking */}
-                <div className="p-1 opacity-50">
+                <div className="p-2 opacity-50 text-muted-foreground">
                     <ArrowLeft className="w-4 h-4" />
                 </div>
                 {/* Project name skeleton */}

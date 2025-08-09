@@ -34,16 +34,16 @@ export const MessageLoading = () => {
     return (
         <div className="flex flex-col group px-2 pb-4">
             <div className="flex items-center gap-2 pl-2 mb-2">
-                <span className="text-sm font-medium">Manit</span>
+                <span className="text-sm font-medium text-foreground">Manit</span>
                 <span className="text-xs text-muted-foreground">
                     Step {step + 1} of {steps.length}
                 </span>
             </div>
             <div className="pl-8.5 flex items-center gap-2">
                 <div className="flex items-center gap-1">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
-                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse delay-75" />
-                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse delay-150" />
+                    <div className="w-2 h-2 bg-primary rounded-full pulse-subtle" />
+                    <div className="w-2 h-2 bg-primary rounded-full pulse-subtle delay-75" />
+                    <div className="w-2 h-2 bg-primary rounded-full pulse-subtle delay-150" />
                 </div>
                 <span className="text-sm text-muted-foreground transition-all duration-300">
                     {steps[step]}
@@ -51,9 +51,9 @@ export const MessageLoading = () => {
             </div>
             {/* Simple progress bar */}
             <div className="pl-8.5 mt-2">
-                <div className="w-48 h-1 bg-gray-200 rounded-full overflow-hidden">
+                <div className="w-48 h-1 bg-muted rounded-full overflow-hidden">
                     <div
-                        className="h-full bg-blue-500 transition-all duration-500 ease-out"
+                        className="h-full bg-gradient-to-r from-primary to-glow-primary transition-all duration-500 ease-out"
                         style={{ width: `${((step + 1) / steps.length) * 100}%` }}
                     />
                 </div>
