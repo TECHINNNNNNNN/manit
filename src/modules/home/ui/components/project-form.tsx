@@ -160,10 +160,10 @@ export const ProjectForm = () => {
                                     }}
                                     disabled={isPending || isRedirecting}
                                     className={cn(
-                                        "flex-1 px-4 py-2 border rounded-md transition-colors",
+                                        "flex-1 px-4 py-2.5 rounded-lg transition-all duration-200 font-medium border",
                                         form.watch('isPersonal') 
-                                            ? "bg-blue-50 border-blue-500 text-blue-700" 
-                                            : "hover:bg-gray-50"
+                                            ? "bg-gradient-to-r from-orange-500/20 to-amber-500/20 border-orange-500/30 text-orange-400" 
+                                            : "bg-transparent border-white/10 text-muted-foreground hover:bg-white/5 hover:text-foreground hover:border-white/20"
                                     )}
                                 >
                                     Personal
@@ -177,10 +177,10 @@ export const ProjectForm = () => {
                                     }}
                                     disabled={isPending || isRedirecting}
                                     className={cn(
-                                        "flex-1 px-4 py-2 border rounded-md transition-colors",
+                                        "flex-1 px-4 py-2.5 rounded-lg transition-all duration-200 font-medium border",
                                         !form.watch('isPersonal') 
-                                            ? "bg-blue-50 border-blue-500 text-blue-700" 
-                                            : "hover:bg-gray-50"
+                                            ? "bg-gradient-to-r from-orange-500/20 to-amber-500/20 border-orange-500/30 text-orange-400" 
+                                            : "bg-transparent border-white/10 text-muted-foreground hover:bg-white/5 hover:text-foreground hover:border-white/20"
                                     )}
                                 >
                                     Organization
