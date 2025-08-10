@@ -40,22 +40,22 @@ export const ProjectList = () => {
                     </div>
                 )}
                 {projects?.map((project) => (
-                    <button
+                    <Link 
                         key={project.id}
-                        className="font-normal h-auto justify-start w-full text-start p-4"
+                        href={`/projects/${project.id}`}
+                        className="block"
                     >
-                        <Link href={`/projects/${project.id}`}>
-                            <div className="flex flex-col">
-                                <h3 className="truncate font-medium">
+                        <div className="relative bg-[rgba(21,22,25,0.5)] backdrop-blur-sm border border-[rgba(255,255,255,0.06)] rounded-xl p-4 transition-all duration-300 hover:border-[rgba(255,107,53,0.3)] hover:bg-[rgba(21,22,25,0.7)] hover:shadow-lg hover:shadow-orange-500/10 hover:translate-y-[-2px]">
+                            <div className="flex flex-col gap-1">
+                                <h3 className="truncate font-medium text-foreground/90 hover:text-orange-400 transition-colors duration-300">
                                     {project.name}
                                 </h3>
                                 <p className="text-sm text-muted-foreground">
-                                    {formatDistanceToNow(project.updatedAt, { addSuffix: true })} ago
+                                    Updated {formatDistanceToNow(project.updatedAt, { addSuffix: true })} ago
                                 </p>
                             </div>
-                        </Link>
-
-                    </button>
+                        </div>
+                    </Link>
                 ))}
             </div>
         </div>
