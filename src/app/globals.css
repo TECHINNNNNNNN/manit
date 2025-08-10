@@ -349,3 +349,15 @@ button[type="submit"]:disabled,
   width: 1rem;
   height: 1rem;
 }
+
+/* Hide scrollbar while keeping scroll functionality */
+.scrollbar-hide {
+  /* Firefox */
+  scrollbar-width: none;
+  /* Safari and Chrome */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  /* IE and Edge */
+  -ms-overflow-style: none;
+}
