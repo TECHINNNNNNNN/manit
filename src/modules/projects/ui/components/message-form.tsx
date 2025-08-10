@@ -44,7 +44,7 @@ export const MessageForm = ({ projectId }: Props) => {
 
     const createMessage = useMutation(trpc.messages.create.mutationOptions({
         onSuccess: () => {
-            toast.success("Message sent! AI is processing...");
+            toast.success("Message sent! Manus is cooking...");
             form.reset();
             queryClient.invalidateQueries(
                 trpc.messages.getMany.queryOptions({ projectId }),
