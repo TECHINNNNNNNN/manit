@@ -1,5 +1,5 @@
 import { useTRPC } from "@/trpc/client";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { MessageCard } from "@/modules/projects/ui/components/message-card";
 import { MessageForm } from "./message-form";
 import { MessageLoading } from "@/modules/projects/ui/components/message-loading";
@@ -14,7 +14,16 @@ interface Props {
 
 export const MessagesContainer = ({ projectId, activeFragment, setActiveFragment }: Props) => {
     const trpc = useTRPC();
-    const { data: messages } = useSuspenseQuery(trpc.messages.getMany.queryOptions({ projectId: projectId, }));
+    const { data: messages = [] } = useQuery({
+        ...trpc.messages.getMany.queryOptions({ projectId: projectId, }),
+        refetchInterval: (query) => {
+            const msgs = query.state.data || [];
+            const lastMsg = msgs[msgs.length - 1];
+            const isWaitingForResponse = lastMsg?.role === "USER";
+            return isWaitingForResponse ? 2000 : false; // Poll every 2 seconds while waiting
+        },
+        refetchIntervalInBackground: true, // Keep polling even if tab loses focus
+    });
     const bottomRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -30,7 +39,7 @@ export const MessagesContainer = ({ projectId, activeFragment, setActiveFragment
     }, [messages.length]);
 
     const lastMessage = messages[messages.length - 1];
-    const isLastMessageUser = lastMessage.role === "USER";
+    const isLastMessageUser = lastMessage?.role === "USER";
 
     return (
         <div className="flex flex-col flex-1 min-h-0 bg-background">
