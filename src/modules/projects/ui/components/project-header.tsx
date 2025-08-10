@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { DeploymentStatusDisplay } from "./deployment-status";
+import { DeploymentStatus } from "@/generated/prisma";
 
 interface Props {
     projectId: string;
@@ -23,8 +24,8 @@ export const ProjectHeader = ({ projectId }: Props) => {
         // Poll every 3 seconds if deployment is in progress
         refetchInterval: (query) => {
             const projectData = query.state.data;
-            const isDeploying = projectData?.deploymentStatus === "deploying" || 
-                               projectData?.deploymentStatus === "pending";
+            const isDeploying = projectData?.deploymentStatus === DeploymentStatus.DEPLOYING || 
+                               projectData?.deploymentStatus === DeploymentStatus.PENDING;
             return isDeploying ? 3000 : false; // Poll every 3 seconds while deploying
         },
         refetchIntervalInBackground: true, // Keep polling even if tab loses focus
@@ -40,12 +41,22 @@ export const ProjectHeader = ({ projectId }: Props) => {
                     </Link>
                 </div>
                 <div className="flex items-center gap-4">
-                    {/* Loading skeleton for deployment status */}
+                    {/* Beautiful skeleton matching DeploymentStatusDisplay layout */}
                     <div className="flex items-center gap-2">
-                        <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
-                        <span className="text-sm text-muted-foreground">Loading project...</span>
+                        {/* Status badge skeleton */}
+                        <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-gray-50 animate-pulse">
+                            <div className="w-4 h-4 bg-gray-200 rounded-full" />
+                            <div className="w-20 h-4 bg-gray-200 rounded" />
+                        </div>
+                        
+                        {/* Button skeletons matching the share buttons */}
+                        <div className="h-8 w-24 bg-muted/10 border border-border rounded-md animate-pulse" />
+                        <div className="h-8 w-20 bg-muted/10 border border-border rounded-md animate-pulse" />
+                        <div className="h-8 w-24 bg-primary/10 rounded-md animate-pulse" />
                     </div>
-                    <div className="w-24 h-4 bg-muted/20 rounded animate-pulse" />
+                    
+                    {/* Date skeleton */}
+                    <div className="w-20 h-4 bg-muted/20 rounded animate-pulse" />
                 </div>
             </div>
         );
