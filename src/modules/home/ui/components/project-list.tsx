@@ -45,14 +45,20 @@ export const ProjectList = () => {
                         href={`/projects/${project.id}`}
                         className="block"
                     >
-                        <div className="relative bg-[rgba(21,22,25,0.5)] backdrop-blur-sm border border-[rgba(255,255,255,0.06)] rounded-xl p-4 transition-all duration-300 hover:border-[rgba(255,107,53,0.3)] hover:bg-[rgba(21,22,25,0.7)] hover:shadow-lg hover:shadow-orange-500/10 hover:translate-y-[-2px]">
-                            <div className="flex flex-col gap-1">
-                                <h3 className="truncate font-medium text-foreground/90 hover:text-orange-400 transition-colors duration-300">
-                                    {project.name}
-                                </h3>
-                                <p className="text-sm text-muted-foreground">
-                                    Updated {formatDistanceToNow(project.updatedAt, { addSuffix: true })} ago
-                                </p>
+                        <div className="relative group">
+                            {/* Subtle aura glow effect */}
+                            <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-orange-500/5 via-amber-500/5 to-purple-500/5 opacity-50 blur-md group-hover:opacity-100 transition-opacity duration-300" />
+                            
+                            {/* Main card */}
+                            <div className="relative bg-[rgba(30,31,35,0.8)] backdrop-blur-md border border-[rgba(255,255,255,0.08)] rounded-xl p-4 shadow-[0_2px_12px_rgba(0,0,0,0.3)] transition-all duration-300 group-hover:border-[rgba(255,107,53,0.35)] group-hover:bg-[rgba(30,31,35,0.9)] group-hover:shadow-[0_4px_20px_rgba(255,107,53,0.15)] group-hover:translate-y-[-2px]">
+                                <div className="flex flex-col gap-1">
+                                    <h3 className="truncate font-medium text-foreground group-hover:text-orange-400 transition-colors duration-300">
+                                        {project.name}
+                                    </h3>
+                                    <p className="text-sm text-muted-foreground">
+                                        Updated {formatDistanceToNow(project.updatedAt, { addSuffix: true })} ago
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </Link>
