@@ -20,10 +20,9 @@ export const ProjectHeader = ({ projectId }: Props) => {
                 <Link href="/" className="btn-ghost p-2 rounded-md">
                     <ArrowLeft className="w-4 h-4" />
                 </Link>
-                <h1 className="text-lg font-semibold text-foreground">{project.name}</h1>
             </div>
             <div className="flex items-center gap-4">
-                <DeploymentStatusDisplay 
+                <DeploymentStatusDisplay
                     status={project.deploymentStatus}
                     deploymentUrl={project.deploymentUrl}
                     shortUrl={project.shortUrl}
