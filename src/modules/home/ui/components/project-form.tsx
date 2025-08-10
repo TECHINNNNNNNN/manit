@@ -350,7 +350,10 @@ export const ProjectForm = () => {
                             <div className="flex flex-wrap gap-2 mt-3">
                                 <button
                                     type="button"
-                                    onClick={() => form.setValue("styleDescription", "Minimalist design with clean lines and monochrome colors")}
+                                    onClick={() => {
+                                        form.setValue("styleDescription", "Minimalist design with clean lines and monochrome colors");
+                                        form.trigger("styleDescription"); // Trigger validation after setting value
+                                    }}
                                     className="btn-tag"
                                     disabled={isPending || isRedirecting}
                                 >
@@ -359,7 +362,10 @@ export const ProjectForm = () => {
                                 </button>
                                 <button
                                     type="button"
-                                    onClick={() => form.setValue("styleDescription", "Vibrant neon colors with cyberpunk aesthetic and glowing effects")}
+                                    onClick={() => {
+                                        form.setValue("styleDescription", "Vibrant neon colors with cyberpunk aesthetic and glowing effects");
+                                        form.trigger("styleDescription"); // Trigger validation after setting value
+                                    }}
                                     className="btn-tag"
                                     disabled={isPending || isRedirecting}
                                 >
@@ -368,7 +374,10 @@ export const ProjectForm = () => {
                                 </button>
                                 <button
                                     type="button"
-                                    onClick={() => form.setValue("styleDescription", "Professional corporate style with blue tones and clean typography")}
+                                    onClick={() => {
+                                        form.setValue("styleDescription", "Professional corporate style with blue tones and clean typography");
+                                        form.trigger("styleDescription"); // Trigger validation after setting value
+                                    }}
                                     className="btn-tag"
                                     disabled={isPending || isRedirecting}
                                 >
@@ -377,7 +386,10 @@ export const ProjectForm = () => {
                                 </button>
                                 <button
                                     type="button"
-                                    onClick={() => form.setValue("styleDescription", "Playful and colorful design with rounded corners and fun animations")}
+                                    onClick={() => {
+                                        form.setValue("styleDescription", "Playful and colorful design with rounded corners and fun animations");
+                                        form.trigger("styleDescription"); // Trigger validation after setting value
+                                    }}
                                     className="btn-tag"
                                     disabled={isPending || isRedirecting}
                                 >
