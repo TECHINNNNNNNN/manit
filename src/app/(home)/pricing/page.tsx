@@ -13,10 +13,10 @@ const Page = () => {
         <div className="min-h-screen bg-background p-4">
             <div className="max-w-7xl mx-auto">
                 <div className="text-center mb-12">
-                    <h1 className="text-4xl font-bold text-gradient-primary mb-4">
+                    <h1 className="text-4xl font-display text-gradient-primary mb-4">
                         Choose Your Plan
                     </h1>
-                    <p className="text-muted-foreground text-lg">
+                    <p className="text-muted-foreground text-lg font-ui font-light">
                         Select the perfect plan for your project needs
                     </p>
                 </div>

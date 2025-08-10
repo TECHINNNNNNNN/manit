@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { TRPCReactProvider } from "@/trpc/client";
 import { Toaster } from "sonner";
@@ -14,6 +15,46 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+/**
+ * FONT CONFIGURATION
+ * PURPOSE: Typography hierarchy for vibrant dark theme
+ * FLOW: Display > Brand > UI > Body > Code
+ * DEPENDENCIES: Local font files in /public/font
+ */
+
+// Display font for hero headlines - warm & engaging
+const pacifico = localFont({
+  src: "../../public/font/Pacifico-Regular.ttf",
+  variable: "--font-pacifico",
+  display: "swap",
+  weight: "400",
+});
+
+// Brand font for logo & special headings - friendly yet professional
+const playpenSans = localFont({
+  src: "../../public/font/PlaypenSans-VariableFont_wght.ttf",
+  variable: "--font-playpen",
+  display: "swap",
+  weight: "300 800",
+});
+
+// UI font for interface elements - modern & clean
+const plusJakarta = localFont({
+  src: [
+    {
+      path: "../../public/font/PlusJakartaSans-VariableFont_wght.ttf",
+      style: "normal",
+    },
+    {
+      path: "../../public/font/PlusJakartaSans-Italic-VariableFont_wght.ttf",
+      style: "italic",
+    },
+  ],
+  variable: "--font-plus-jakarta",
+  display: "swap",
+  weight: "200 800",
 });
 
 export const metadata: Metadata = {
@@ -31,7 +72,7 @@ export default function RootLayout({
       <TRPCReactProvider>
         <html lang="en">
           <body
-            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+            className={`${geistSans.variable} ${geistMono.variable} ${pacifico.variable} ${playpenSans.variable} ${plusJakarta.variable} antialiased`}
           >
             <AnimatedBackground />
             <Toaster />

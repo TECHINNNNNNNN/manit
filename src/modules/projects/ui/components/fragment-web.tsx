@@ -30,13 +30,13 @@ export const FragmentWeb = ({ data }: Props) => {
             <div className="flex items-center gap-2 px-3 py-2 border-b bg-gray-50">
                 <button
                     onClick={onRefresh}
-                    className="btn-icon"
+                    className="p-1.5 rounded hover:bg-gray-200 transition-colors"
                     title="Refresh"
                 >
-                    <RefreshCw className="w-4 h-4" />
+                    <RefreshCw className="w-4 h-4 text-gray-700" />
                 </button>
-                
-                <div 
+
+                <div
                     onClick={onCopy}
                     className="flex-1 flex items-center gap-2 px-3 py-1.5 bg-white border rounded-md cursor-pointer hover:bg-gray-50 transition-colors"
                 >
@@ -47,16 +47,16 @@ export const FragmentWeb = ({ data }: Props) => {
                         <Check className="w-4 h-4 text-green-600" />
                     )}
                 </div>
-                
+
                 <button
                     onClick={() => window.open(data.sandboxUrl, '_blank')}
-                    className="btn-icon"
+                    className="p-1.5 rounded hover:bg-gray-200 transition-colors"
                     title="Open in new tab"
                 >
-                    <ExternalLink className="w-4 h-4" />
+                    <ExternalLink className="w-4 h-4 text-gray-700" />
                 </button>
             </div>
-            
+
             <div className="relative flex-1">
                 {/* Loading overlay */}
                 {isLoading && (
@@ -65,7 +65,7 @@ export const FragmentWeb = ({ data }: Props) => {
                         <p className="text-sm text-gray-600">Preparing preview...</p>
                     </div>
                 )}
-                
+
                 <iframe
                     key={fragmentKey}
                     className={`w-full h-full transition-opacity duration-500 ${isLoading ? 'opacity-0' : 'opacity-100'}`}

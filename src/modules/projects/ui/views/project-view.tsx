@@ -68,10 +68,10 @@ export const ProjectView = ({ projectId, hasProAccess }: Props) => {
                         <div className="w-full flex items-center p-2 border-b border-border bg-card/20 gap-x-2">
                             <TabsList className="h-8 p-0 border border-border bg-muted/20 rounded-md">
                                 <TabsTrigger value="preview">
-                                    <EyeIcon /><span>Demo</span>
+                                    <EyeIcon /><span className="font-ui">Demo</span>
                                 </TabsTrigger>
                                 <TabsTrigger value="code">
-                                    <CodeIcon /><span>Code</span>
+                                    <CodeIcon /><span className="font-ui">Code</span>
                                 </TabsTrigger>
                             </TabsList>
                             <AuthSection hasProAccess={hasProAccess} />

@@ -14,18 +14,18 @@ export default function Home() {
           <div className="p-3 rounded-2xl bg-gradient-to-br from-orange-500/20 to-amber-500/20 backdrop-blur-sm border border-white/10">
             <Sparkles className="w-8 h-8 text-orange-500" />
           </div>
-          <span className="text-sm font-medium text-muted-foreground tracking-wider uppercase">Manit AI</span>
+          <span className="text-sm font-ui font-medium text-muted-foreground tracking-wider uppercase">Manit AI</span>
         </div>
 
         {/* Main headline with gradient */}
-        <h1 className="text-center text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
+        <h1 className="text-center text-5xl md:text-6xl lg:text-7xl font-display leading-tight">
           <span className="text-gradient-primary">Link tree to app,</span>
           <br />
           <span className="text-gradient">fast.</span>
         </h1>
 
         {/* Tagline */}
-        <p className="text-center text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
+        <p className="text-center text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto font-ui font-light">
           Create beautiful, modern link trees at the speed of thought.
           Describe what you need and Manit&apos;s AI builds it for you.
         </p>

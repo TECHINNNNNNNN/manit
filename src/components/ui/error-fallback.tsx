@@ -57,24 +57,24 @@ export const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
     return (
         <div className="flex flex-col items-center justify-center min-h-[200px] p-6 text-center">
             {icon}
-            <h3 className="mt-4 text-lg font-semibold text-gray-900">{title}</h3>
-            <p className="mt-2 text-sm text-gray-600 max-w-md">{message}</p>
+            <h3 className="mt-4 text-lg font-ui font-semibold text-gray-900">{title}</h3>
+            <p className="mt-2 text-sm text-gray-600 max-w-md font-ui">{message}</p>
             
             <button
                 onClick={resetErrorBoundary}
                 className="mt-4 btn-primary"
             >
                 <RefreshCw className="w-4 h-4" />
-                Try Again
+                <span className="font-ui">Try Again</span>
             </button>
             
             {/* Show error details in development */}
             {process.env.NODE_ENV === "development" && error?.message && (
                 <details className="mt-4 text-left">
-                    <summary className="text-xs text-gray-500 cursor-pointer">
+                    <summary className="text-xs text-gray-500 cursor-pointer font-ui">
                         Error details
                     </summary>
-                    <pre className="mt-2 p-2 bg-gray-100 rounded text-xs overflow-auto max-w-md">
+                    <pre className="mt-2 p-2 bg-gray-100 rounded text-xs overflow-auto max-w-md font-mono">
                         {error.message}
                     </pre>
                 </details>

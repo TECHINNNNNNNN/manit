@@ -2,6 +2,13 @@
 
 /* Theme configuration for Tailwind v4 */
 @theme {
+  /* Typography system - proper Tailwind v4 way */
+  --font-family-display: var(--font-pacifico);
+  --font-family-brand: var(--font-playpen);
+  --font-family-ui: var(--font-plus-jakarta);
+  --font-family-body: var(--font-plus-jakarta);
+  --font-family-mono: var(--font-geist-mono);
+  
   --radius: 0.75rem;
   
   /* Colors */
@@ -55,6 +62,22 @@
   /* Destructive */
   --color-destructive: #EF4444;
   --color-destructive-foreground: #FFFFFF;
+}
+
+/* Font utility classes for Tailwind v4 */
+@layer utilities {
+  .font-display {
+    font-family: var(--font-family-display);
+  }
+  .font-brand {
+    font-family: var(--font-family-brand);
+  }
+  .font-ui {
+    font-family: var(--font-family-ui);
+  }
+  .font-body {
+    font-family: var(--font-family-body);
+  }
 }
 
 /* Base styles */
