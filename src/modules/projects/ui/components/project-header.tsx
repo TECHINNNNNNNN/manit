@@ -29,7 +29,7 @@ export const ProjectHeader = ({ projectId }: Props) => {
                     githubRepo={project.githubRepo}
                     projectName={project.name}
                 />
-                <div className="text-sm text-muted-foreground">
+                <div className="text-sm text-muted-foreground font-ui">
                     {new Date(project.createdAt).toLocaleDateString()}
                 </div>
             </div>

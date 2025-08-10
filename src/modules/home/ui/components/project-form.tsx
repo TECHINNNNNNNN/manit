@@ -146,7 +146,7 @@ export const ProjectForm = () => {
                     <div className="space-y-4">
                         {/* Personal/Organization Toggle */}
                         <div className="space-y-2">
-                            <h3 className="text-sm font-medium">Profile Type</h3>
+                            <h3 className="text-sm font-ui font-medium">Profile Type</h3>
                             <div className="flex gap-2">
                                 <button
                                     type="button"
@@ -160,7 +160,7 @@ export const ProjectForm = () => {
                                     }}
                                     disabled={isPending || isRedirecting}
                                     className={cn(
-                                        "flex-1 px-4 py-2.5 rounded-lg transition-all duration-200 font-medium border",
+                                        "flex-1 px-4 py-2.5 rounded-lg transition-all duration-200 font-ui font-medium border",
                                         form.watch('isPersonal') 
                                             ? "bg-gradient-to-r from-orange-500/20 to-amber-500/20 border-orange-500/30 text-orange-400" 
                                             : "bg-transparent border-white/10 text-muted-foreground hover:bg-white/5 hover:text-foreground hover:border-white/20"
@@ -177,7 +177,7 @@ export const ProjectForm = () => {
                                     }}
                                     disabled={isPending || isRedirecting}
                                     className={cn(
-                                        "flex-1 px-4 py-2.5 rounded-lg transition-all duration-200 font-medium border",
+                                        "flex-1 px-4 py-2.5 rounded-lg transition-all duration-200 font-ui font-medium border",
                                         !form.watch('isPersonal') 
                                             ? "bg-gradient-to-r from-orange-500/20 to-amber-500/20 border-orange-500/30 text-orange-400" 
                                             : "bg-transparent border-white/10 text-muted-foreground hover:bg-white/5 hover:text-foreground hover:border-white/20"
@@ -193,7 +193,7 @@ export const ProjectForm = () => {
                             <div className="space-y-2 p-3 glass rounded-lg">
                                 <div className="space-y-2">
                                     <div className="flex justify-between items-baseline">
-                                        <label className="text-sm font-medium">Organization Name *</label>
+                                        <label className="text-sm font-ui font-medium">Organization Name *</label>
                                         <span className={`text-xs ${
                                             (form.watch("organizationName")?.length ?? 0) > 100 ? "text-red-500" : 
                                             (form.watch("organizationName")?.length ?? 0) > 0 ? "text-green-500" : "text-muted-foreground"
@@ -214,7 +214,7 @@ export const ProjectForm = () => {
                                 
                                 <div className="space-y-2">
                                     <div className="flex justify-between items-baseline">
-                                        <label className="text-sm font-medium">Business Type *</label>
+                                        <label className="text-sm font-ui font-medium">Business Type *</label>
                                         <span className={`text-xs ${
                                             (form.watch("businessType")?.length ?? 0) > 100 ? "text-red-500" : 
                                             (form.watch("businessType")?.length ?? 0) > 0 ? "text-green-500" : "text-muted-foreground"
@@ -235,7 +235,7 @@ export const ProjectForm = () => {
                                 
                                 <div className="space-y-2">
                                     <div className="flex justify-between items-baseline">
-                                        <label className="text-sm font-medium">Target Audience (optional)</label>
+                                        <label className="text-sm font-ui font-medium">Target Audience (optional)</label>
                                         <span className={`text-xs ${
                                             (form.watch("targetAudience")?.length ?? 0) > 200 ? "text-red-500" : "text-muted-foreground"
                                         }`}>
@@ -256,7 +256,7 @@ export const ProjectForm = () => {
 
                         {/* Links Section */}
                         <div className="space-y-2">
-                            <h3 className="text-sm font-medium">Your Links</h3>
+                            <h3 className="text-sm font-ui font-medium">Your Links</h3>
                             {fields.map((field, index) => {
                                 const urlValue = form.watch(`links.${index}.url`);
                                 const platformValue = form.watch(`links.${index}.platform`);
@@ -323,7 +323,7 @@ export const ProjectForm = () => {
                         {/* Style Description */}
                         <div className="space-y-2">
                             <div className="flex justify-between items-baseline">
-                                <h3 className="text-sm font-medium">Style Preferences</h3>
+                                <h3 className="text-sm font-ui font-medium">Style Preferences</h3>
                                 <span className={`text-xs ${
                                     form.watch("styleDescription")?.length > 500 ? "text-red-500" :
                                     form.watch("styleDescription")?.length >= 10 ? "text-green-500" : 

@@ -12,7 +12,7 @@ export const Navbar = () => {
         >
             <div className="max-w-5xl mx-auto flex items-center w-full justify-between">
                 <Link href="/" className="flex items-center gap-2">
-                    <span className="text-2xl font-bold">Manit</span>
+                    <span className="text-2xl font-brand font-semibold">Manit</span>
                 </Link>
                 <SignedOut>
                     <div className="flex gap-2">

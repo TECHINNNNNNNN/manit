@@ -15,7 +15,7 @@ export const AuthSection = ({ hasProAccess }: Props) => {
                 <button>
                     <Link href="/pricing" className="flex items-center gap-x-2">
                         <CrownIcon />
-                        <span>Upgrade</span>
+                        <span className="font-ui">Upgrade</span>
                     </Link>
                 </button>
             )}
