@@ -105,11 +105,11 @@ export const AnimatedBackground = () => {
       <canvas
         ref={canvasRef}
         className="fixed inset-0 pointer-events-none opacity-80"
-        style={{ zIndex: 1 }}
+        style={{ zIndex: -1 }}
       />
       
       {/* Gradient orbs - more vivid */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 0 }}>
+      <div className="fixed inset-0 overflow-hidden pointer-events-none" style={{ zIndex: -2 }}>
         <div className="absolute -top-40 -left-40 w-96 h-96 bg-gradient-to-br from-orange-500/30 via-amber-500/20 to-transparent rounded-full blur-3xl animate-pulse" />
         <div className="absolute -bottom-40 -right-40 w-[500px] h-[500px] bg-gradient-to-br from-purple-500/25 via-pink-500/15 to-transparent rounded-full blur-3xl animate-pulse" style={{ animationDelay: "2s" }} />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-br from-amber-500/15 via-orange-500/10 to-transparent rounded-full blur-3xl animate-pulse" style={{ animationDelay: "4s" }} />
