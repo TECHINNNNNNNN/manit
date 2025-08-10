@@ -18,14 +18,12 @@ export const MessagesContainer = ({ projectId, activeFragment, setActiveFragment
     const bottomRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if (!activeFragment) {
-            const lastAssistantMessage = messages.findLast((message) => message.role === "ASSISTANT");
+        const lastAssistantMessage = messages.findLast((message) => message.role === "ASSISTANT");
 
-            if (lastAssistantMessage?.fragments) {
-                setActiveFragment(lastAssistantMessage.fragments);
-            }
+        if (lastAssistantMessage?.fragments) {
+            setActiveFragment(lastAssistantMessage.fragments);
         }
-    }, [messages, setActiveFragment, activeFragment]);
+    }, [messages, setActiveFragment]);
 
     useEffect(() => {
         bottomRef.current?.scrollIntoView();
