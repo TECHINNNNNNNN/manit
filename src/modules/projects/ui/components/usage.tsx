@@ -33,7 +33,7 @@ export function Usage({ points, msBeforeNext }: UsageProps) {
             <div className="flex items-center justify-between">
                 <div>
                     <div className="text-sm">
-                        {hasProAccess ? "100" : points} free credits remaining
+                        {points} {hasProAccess ? "pro" : "free"} credits remaining
                     </div>
                     <p className="text-xs text-muted-foreground">
                         Resets in{" "} {resetTime}
