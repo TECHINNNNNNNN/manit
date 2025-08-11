@@ -1,6 +1,9 @@
 {
   "name": "manit",
   "version": "0.1.0",
+  "description": "AI-powered linktree generator - create stunning link-in-bio pages instantly with AI",
+  "author": "Manit AI",
+  "keywords": ["linktree", "AI", "link-in-bio", "social-media", "nextjs", "react"],
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
