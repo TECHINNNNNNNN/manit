@@ -1,16 +1,8 @@
-/**
- * COMPONENT: URL Shortener Service
- * PURPOSE: Generate short, shareable URLs for deployed projects
- * FLOW: Hash projectId → Generate base62 code → Check collision → Return URL
- * DEPENDENCIES: crypto, base conversion
- */
+// Generate short URLs for project sharing
 
 import { createHash } from 'crypto';
 
-/**
- * Convert number to base62 string (0-9, A-Z, a-z)
- * More compact than base16, URL-safe unlike base64
- */
+// Convert to base62 (more compact than hex, URL-safe unlike base64)
 const toBase62 = (num: bigint): string => {
   const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
   let result = '';
@@ -23,10 +15,7 @@ const toBase62 = (num: bigint): string => {
   return result || '0';
 };
 
-/**
- * Generate a short code from project ID
- * Uses first 8 chars of SHA256 hash for good distribution
- */
+// Generate short code from project ID using SHA256 hash
 export const generateShortCode = (projectId: string): string => {
   // Add timestamp for uniqueness even if same project deployed multiple times
   const input = `${projectId}-${Date.now()}`;
@@ -45,35 +34,26 @@ export const generateShortCode = (projectId: string): string => {
   return shortCode.padStart(6, '0');
 };
 
-/**
- * Build full short URL from code
- */
+// Build full short URL from code
 export const buildShortUrl = (shortCode: string): string => {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
   return `${baseUrl}/s/${shortCode}`;
 };
 
-/**
- * Extract short code from full URL
- */
+// Extract short code from URL
 export const extractShortCode = (url: string): string | null => {
   const match = url.match(/\/s\/([A-Za-z0-9]+)$/);
   return match ? match[1] : null;
 };
 
-/**
- * Generate QR code for URL sharing
- * Uses a simple QR API service
- */
+// Generate QR code URL for sharing
 export const generateQRCodeUrl = (url: string): string => {
   const encoded = encodeURIComponent(url);
   // Using qr-server.com API (free, no auth required)
   return `https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=${encoded}`;
 };
 
-/**
- * Format URLs for display
- */
+// Format URLs for display and sharing
 export const formatUrlsForDisplay = (deploymentUrl: string, shortUrl: string) => {
   return {
     full: deploymentUrl,

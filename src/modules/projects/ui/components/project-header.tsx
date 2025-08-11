@@ -9,12 +9,7 @@ interface Props {
     projectId: string;
 }
 
-/**
- * COMPONENT: ProjectHeader
- * PURPOSE: Displays project header with deployment status
- * FLOW: Fetches project data -> Shows loading state -> Displays status with polling
- * DEPENDENCIES: useQuery for data fetching with polling support
- */
+// Project header with deployment status - polls every 3s while deploying
 export const ProjectHeader = ({ projectId }: Props) => {
     const trpc = useTRPC();
     
