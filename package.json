@@ -3,7 +3,14 @@
   "version": "0.1.0",
   "description": "AI-powered linktree generator - create stunning link-in-bio pages instantly with AI",
   "author": "Manit AI",
-  "keywords": ["linktree", "AI", "link-in-bio", "social-media", "nextjs", "react"],
+  "keywords": [
+    "linktree",
+    "AI",
+    "link-in-bio",
+    "social-media",
+    "nextjs",
+    "react"
+  ],
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
@@ -13,7 +20,8 @@
     "test": "vitest",
     "test:unit": "vitest",
     "test:e2e": "playwright test",
-    "test:all": "npm run test:unit && npm run test:e2e"
+    "test:all": "npm run test:unit && npm run test:e2e",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.28.1",
