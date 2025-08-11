@@ -10,10 +10,8 @@ export default function Home() {
     <div className="relative flex flex-col max-w-6xl mx-auto w-full px-4" style={{ zIndex: 10 }}>
       <section className="space-y-8 py-20">
         {/* Logo and brand */}
-        <div className="flex flex-col items-center space-y-2">
-          <div className="p-3 rounded-2xl bg-gradient-to-br from-orange-500/20 to-amber-500/20 backdrop-blur-sm border border-white/10">
-            <ManitLogo className="w-8 h-8 text-orange-500" />
-          </div>
+        <div className="flex flex-col items-center space-y-4">
+          <ManitLogo className="w-12 h-12" />
           <span className="text-sm font-ui font-medium text-muted-foreground tracking-wider uppercase">Manit AI</span>
         </div>
 
