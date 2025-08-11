@@ -1,9 +1,4 @@
-/**
- * COMPONENT: DeploymentStatus
- * PURPOSE: Display deployment status and share options for projects
- * FLOW: Show status → Provide share URLs → Copy/QR actions
- * DEPENDENCIES: Project deployment data, URL shortener
- */
+// Shows deployment status with sharing options - copy link, QR code, social share
 
 import { DeploymentStatus as Status } from "@/generated/prisma";
 import { useState } from "react";

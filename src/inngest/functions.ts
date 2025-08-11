@@ -10,8 +10,7 @@ import { SANDBOX_TIMEOUT } from "./types";
 import { deployToGitHubPages } from "@/lib/github-deploy";
 import { generateShortCode, buildShortUrl } from "@/lib/url-shortener";
 
-// Message type is imported from @inngest/agent-kit for agent communication
-// Database messages use the Message model from Prisma
+// Note: Different Message types - @inngest/agent-kit vs Prisma models
 
 interface AgentState {
     summary: string;

@@ -1,16 +1,8 @@
-/**
- * COMPONENT: GitHub Deployment Service
- * PURPOSE: Deploy generated linktrees to GitHub Pages
- * FLOW: Create repo → Upload files → Enable Pages → Return URL
- * DEPENDENCIES: Octokit, environment variables
- */
+// Deploy linktrees to GitHub Pages automatically
 
 import { Octokit } from '@octokit/rest';
 
-/**
- * Initialize Octokit with Personal Access Token
- * Token needs: repo, workflow permissions
- */
+// Octokit client with PAT (needs repo + workflow perms)
 const getOctokit = () => {
   const token = process.env.GITHUB_DEPLOY_TOKEN;
   if (!token) {
@@ -19,10 +11,7 @@ const getOctokit = () => {
   return new Octokit({ auth: token });
 };
 
-/**
- * Generate unique repository name for project
- * Format: linktree-{projectName}-{shortId}
- */
+// Generate unique repo name: linktree-{projectName}-{shortId}
 export const generateRepoName = (projectName: string, projectId: string): string => {
   // Sanitize project name for GitHub repo naming rules
   const sanitized = projectName
@@ -40,9 +29,7 @@ export const generateRepoName = (projectName: string, projectId: string): string
   return repoName;
 };
 
-/**
- * Deploy HTML content to GitHub Pages
- */
+// Deploy HTML to GitHub Pages
 export interface DeploymentResult {
   success: boolean;
   repoName?: string;
@@ -169,9 +156,7 @@ export const deployToGitHubPages = async (
   }
 };
 
-/**
- * Check deployment status (GitHub Pages can take a few minutes)
- */
+// Check Pages build status (can take a few minutes)
 export const checkDeploymentStatus = async (repoName: string): Promise<'building' | 'built' | 'errored' | 'not_found'> => {
   try {
     const octokit = getOctokit();
@@ -195,9 +180,7 @@ export const checkDeploymentStatus = async (repoName: string): Promise<'building
   }
 };
 
-/**
- * Delete a deployment (cleanup)
- */
+// Delete deployment repo
 export const deleteDeployment = async (repoName: string): Promise<boolean> => {
   try {
     const octokit = getOctokit();
