@@ -19,15 +19,15 @@ export default function Home() {
 
         {/* Main headline with gradient */}
         <h1 className="text-center text-5xl md:text-6xl lg:text-7xl font-display leading-tight">
-          <span className="text-gradient-primary">Link tree to app,</span>
+          <span className="text-gradient-primary">Your linktree,</span>
           <br />
-          <span className="text-gradient">fast.</span>
+          <span className="text-gradient">but AI made it.</span>
         </h1>
 
         {/* Tagline */}
         <p className="text-center text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto font-ui font-light">
-          Create beautiful, modern link trees at the speed of thought.
-          Describe what you need and Manit&apos;s AI builds it for you.
+          Stop wasting hours on design. Just tell AI what vibe you want 
+          and get a fire link-in-bio page deployed in literally seconds.
         </p>
 
         {/* Form container with animated aura effect */}
