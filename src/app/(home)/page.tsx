@@ -1,7 +1,7 @@
 
 import { ProjectForm } from "@/modules/home/ui/components/project-form";
 import { ProjectList } from "@/modules/home/ui/components/project-list";
-import { Sparkles } from "lucide-react";
+import { ManitLogo } from "@/components/icons/ManitLogo";
 
 export default function Home() {
 
@@ -12,7 +12,7 @@ export default function Home() {
         {/* Logo and brand */}
         <div className="flex flex-col items-center space-y-2">
           <div className="p-3 rounded-2xl bg-gradient-to-br from-orange-500/20 to-amber-500/20 backdrop-blur-sm border border-white/10">
-            <Sparkles className="w-8 h-8 text-orange-500" />
+            <ManitLogo className="w-8 h-8 text-orange-500" />
           </div>
           <span className="text-sm font-ui font-medium text-muted-foreground tracking-wider uppercase">Manit AI</span>
         </div>
