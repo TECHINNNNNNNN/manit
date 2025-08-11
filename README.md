@@ -10,7 +10,7 @@ The challenge? Creating an AI system that could understand natural language, gen
 
 ## Live Demo
 
-[Try it yourself](https://manit.ai) - Create your first AI-powered linktree in seconds
+[Try it yourself](https://manit-lac.vercel.app/) - Create your first AI-powered linktree in seconds
 
 ## Technical Highlights
 
