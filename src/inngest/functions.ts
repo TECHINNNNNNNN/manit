@@ -1,17 +1,17 @@
-import { openai, createAgent, createTool, createNetwork, type Tool, createState } from "@inngest/agent-kit";
+import { openai, createAgent, createTool, createNetwork, type Tool, createState, type Message } from "@inngest/agent-kit";
 import { Sandbox } from "@e2b/code-interpreter";
 import { FRAGMENT_TITLE_PROMPT, PROJECT_TITLE_PROMPT, PROMPT, RESPONSE_PROMPT } from "@/prompt";
 
 import { inngest } from "./client";
 import { getSandbox, lastAssistantTextMessageContent } from "./utils";
 import { z } from "zod";
-import { stderr } from "process";
 import prisma from "@/lib/db";
-import { StepToolOptions } from "inngest/components/InngestStepTools";
-import { Message } from "@prisma/client";
 import { SANDBOX_TIMEOUT } from "./types";
 import { deployToGitHubPages } from "@/lib/github-deploy";
 import { generateShortCode, buildShortUrl } from "@/lib/url-shortener";
+
+// Message type is imported from @inngest/agent-kit for agent communication
+// Database messages use the Message model from Prisma
 
 interface AgentState {
     summary: string;
@@ -26,7 +26,7 @@ const parseAgentOutput = (value: Message[]) => {
     }
 
     if (Array.isArray(output.content)) {
-        return output.content.map((txt: string) => txt).join("");
+        return output.content.map((txt) => typeof txt === 'string' ? txt : txt.toString()).join("");
     }
 
     return output.content;
@@ -160,7 +160,7 @@ export const codeAgentFunction = inngest.createFunction(
                     parameters: z.object({
                         files: z.array(z.string()),
                     }),
-                    handler: async ({ files }, { step, network }) => {
+                    handler: async ({ files }, { step }) => {
                         return await step?.run("readFiles", async () => {
                             try {
                                 const sandbox = await getSandbox(sandboxId)
@@ -258,7 +258,7 @@ export const codeAgentFunction = inngest.createFunction(
             return `http://${host}`
         })
 
-        const savedMessage = await step.run("save-result", async () => {
+        await step.run("save-result", async () => {
             if (isError) {
                 return await prisma.message.create({
                     data: {

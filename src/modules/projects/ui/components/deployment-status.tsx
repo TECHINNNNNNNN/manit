@@ -213,8 +213,9 @@ export const DeploymentStatusDisplay = ({
                     </DialogHeader>
                     <div className="flex flex-col items-center gap-4 py-4">
                         <div className="bg-white p-4 rounded-lg border">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
-                                src={`https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=${encodeURIComponent(shareUrl)}`}
+                                src={`https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=${encodeURIComponent(shareUrl || '')}`}
                                 alt="QR Code"
                                 className="w-64 h-64"
                             />
@@ -224,7 +225,7 @@ export const DeploymentStatusDisplay = ({
                         </p>
                         <Button
                             variant="outline"
-                            onClick={() => copyToClipboard(shareUrl, "URL copied!")}
+                            onClick={() => copyToClipboard(shareUrl || '', "URL copied!")}
                             className="w-full"
                         >
                             {copied ? (
